@@ -45,20 +45,29 @@ header {
 h1, h2, h3, .hfont {
 	font: 900 400%/1 var(--font-heading);
 	color: var(--color-body-highlight);
-	text-shadow: 0.05em 0.05em var(--color-stroke),
-	-1px -1px var(--color-stroke),
-	-1px 1px var(--color-stroke),
-	1px -1px var(--color-stroke),
-	1px 1px var(--color-stroke),
-	0 -1px var(--color-stroke),
-	0 1px var(--color-stroke),
-	-1px 0 var(--color-stroke),
-	1px 0 var(--color-stroke)
-	;
 
-	stroke: var(--color-stroke);
+	svg {
+		width: 6ch;
+		height: 1lh;
+		overflow: visible;
+		fill: var(--color-body-highlight);
+		stroke-linejoin: round;
+		stroke-linecap: round;
+		letter-spacing: 0.01em;
 
-	> span {
+		tspan {
+			fill: var(--color-body);
+		}
+
+		use {
+			stroke: var(--color-stroke);
+			stroke-width: 6px;
+			text-shadow: 0.05em 0.06em var(--color-stroke);
+		}
+	}
+
+	> span,
+	tspan {
 		color: var(--color-body);
 	}
 }
