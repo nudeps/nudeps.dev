@@ -1,138 +1,135 @@
 <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 650 650">
 
 <defs>
-	<style>
+<style>
+* {
+	transform-box: stroke-box;
+	transform-origin: center;
+}
 
-		* {
-			transform-box: stroke-box;
-			transform-origin: center;
-		}
+svg {
+	--blink: 0;
+	--tongue: 0;
+	animation: blink 3s step-end infinite, tongue 11s step-end infinite;
+}
 
-		svg {
-			--blink: 0;
-			--tongue: 0;
-			animation: blink 3s step-end infinite, tongue 11s step-end infinite;
-		}
+@keyframes blink {
+	82% { --blink: 1; }
+}
 
-		@keyframes blink {
-			82% { --blink: 1; }
-		}
+@keyframes tongue {
+	70% { --tongue: 1; }
+}
 
-		@keyframes tongue {
-			70% { --tongue: 1; }
-		}
+.body {
+	fill: #eab67d;
+}
+.tape-front {
+	fill: #fddba4;
+}
 
-		.body {
-			fill: #eab67d;
-		}
-		.tape-front {
-			fill: #fddba4;
-		}
+.body-shading {
+	fill: #d89a65;
+}
 
-		.body-shading {
-			fill: #d89a65;
-		}
+.shadow {
+	fill: #a66c59;
+	opacity: .18;
+}
 
-		.shadow {
-			fill: #a66c59;
-			opacity: .18;
-		}
+.tape-shadow {
+	fill: #d59561;
+}
 
-		.tape-shadow {
-			fill: #d59561;
-		}
+.blush {
+	fill: #ef877d;
+	transform-origin: bottom;
+}
+#left-cheek {
+	translate: calc(2px * var(--blink)) calc(-3px * var(--blink));
+	scale: calc(1 + .1 * var(--tongue));
+}
+#right-cheek {
+	translate: calc(-2px * var(--blink)) calc(-3px * var(--blink));
+	scale: calc(1 + .1 * var(--tongue));
+}
 
-		.blush {
-			fill: #ef877d;
-			transform-origin: bottom;
-		}
-		#left-cheek {
-			translate: calc(2px * var(--blink)) calc(-3px * var(--blink));
-			scale: calc(1 + .1 * var(--tongue));
-		}
-		#right-cheek {
-			translate: calc(-2px * var(--blink)) calc(-3px * var(--blink));
-			scale: calc(1 + .1 * var(--tongue));
-		}
+.arm-highlight {
+	fill: #fbce9c;
+}
 
-		.arm-highlight {
-			fill: #fbce9c;
-		}
+.top-highlight {
+	fill: #fce0b8;
+}
 
-		.top-highlight {
-			fill: #fce0b8;
-		}
+.stroke {
+	fill: #523431;
+}
 
-		.stroke {
-			fill: #523431;
-		}
+.eye {
+	fill: #482c29;
+}
 
-		.eye {
-			fill: #482c29;
-		}
+.mouth {
+	fill: #51322f;
+}
 
-		.mouth {
-			fill: #51322f;
-		}
+.tongue {
+	fill: #f59b8c;
+}
 
-		.tongue {
-			fill: #f59b8c;
-		}
+.minimize {
+	fill: #fcc355;
+}
 
-		.minimize {
-			fill: #fcc355;
-		}
+.maximize {
+	fill: #6fbc4b;
+}
 
-		.maximize {
-			fill: #6fbc4b;
-		}
+.browser-line {
+	fill: #cececf;
+}
 
-		.browser-line {
-			fill: #cececf;
-		}
+.browser-title {
+	fill: #edeeed;
+}
 
-		.browser-title {
-			fill: #edeeed;
-		}
+.browser-top {
+	fill: #6f9dc8;
+}
 
-		.browser-top {
-			fill: #6f9dc8;
-		}
+.eye-glow {
+	fill: #f6f5f5;
+}
 
-		.eye-glow {
-			fill: #f6f5f5;
-		}
+.close {
+	fill: #e85a58;
+}
 
-		.close {
-			fill: #e85a58;
-		}
+.browser-page {
+	fill: #fcfcfc;
+}
 
-		.browser-page {
-			fill: #fcfcfc;
-		}
+.browser-chrome {
+	fill: #dcdbdb;
+}
 
-		.browser-chrome {
-			fill: #dcdbdb;
-		}
+.eye .closed {
+	opacity: var(--blink);
+}
 
-		.eye .closed {
-			opacity: var(--blink);
-		}
+.eye > :not(.closed) {
+	opacity: calc(1 - var(--blink));
+}
 
-		.eye > :not(.closed) {
-			opacity: calc(1 - var(--blink));
-		}
+#mouth-with-tongue {
+	opacity: var(--tongue);
+}
 
-		#mouth-with-tongue {
-			opacity: var(--tongue);
-		}
-
-		.mouth.smiling {
-			opacity: calc(1 - var(--tongue));
-		}
-
-
-	</style>
+.mouth.smiling {
+	opacity: calc(1 - var(--tongue));
+}
+</style>
 </defs>
 
 <ellipse class="shadow" cx="325.46" cy="606.09" rx="197.63" ry="28.01"/>
