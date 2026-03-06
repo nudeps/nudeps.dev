@@ -1,5 +1,11 @@
 {
+  "type": "module",
   "devDependencies": {
     "nudeps": "latest"
+  },
+  "scripts": {
+    "prepare": "npx nudeps",
+    "dependencies": "npx nudeps",
+    "build": "./demos/each.sh 'npm install'"
   }
 }
