@@ -40,37 +40,18 @@ header {
 	h1, p {
 		margin: 0;
 	}
+
+	.wordmark {
+		display: block;
+		width: 6ch;
+	}
 }
 
 h1, h2, h3, .hfont {
 	font: 900 400%/1 var(--font-heading);
 	color: var(--color-body-highlight);
 
-	svg {
-		width: 6ch;
-		height: 1lh;
-		overflow: visible;
-		fill: var(--color-body-highlight);
-		stroke-linejoin: round;
-		stroke-linecap: round;
-		letter-spacing: 0.01em;
 
-		tspan {
-			fill: var(--color-body);
-		}
-
-		text {
-			stroke: var(--color-stroke);
-			stroke-width: 8px;
-			paint-order: stroke fill;
-			filter: drop-shadow(2px 2px var(--color-stroke));
-		}
-	}
-
-	> span,
-	tspan {
-		color: var(--color-body);
-	}
 }
 
 .logo {
