@@ -59,10 +59,11 @@ h1, h2, h3, .hfont {
 			fill: var(--color-body);
 		}
 
-		use {
+		text {
 			stroke: var(--color-stroke);
-			stroke-width: 6px;
-			text-shadow: 0.05em 0.06em var(--color-stroke);
+			stroke-width: 8px;
+			paint-order: stroke fill;
+			filter: drop-shadow(2px 2px var(--color-stroke));
 		}
 	}
 
