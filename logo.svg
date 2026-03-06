@@ -11,7 +11,7 @@
 		svg {
 			--blink: 0;
 			--tongue: 0;
-			animation: blink 3s step-end infinite, tongue 7s step-end infinite;
+			animation: blink 3s step-end infinite, tongue 11s step-end infinite;
 		}
 
 		@keyframes blink {
@@ -19,7 +19,7 @@
 		}
 
 		@keyframes tongue {
-			85% { --tongue: 1; }
+			70% { --tongue: 1; }
 		}
 
 		.body {
