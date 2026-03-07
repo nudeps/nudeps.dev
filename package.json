@@ -6,6 +6,7 @@
   "scripts": {
     "prepare": "npx nudeps",
     "dependencies": "npx nudeps",
-    "build": "./demos/each.sh 'npm install'"
+    "build": "./demos/each.sh 'npm install'",
+    "update:submodule": "git submodule update --remote"
   }
 }
