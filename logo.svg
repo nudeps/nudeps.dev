@@ -18,7 +18,7 @@ svg {
 }
 
 @keyframes tongue {
-	70% { --tongue: 1; }
+	90% { --tongue: 1; }
 }
 
 .body {
