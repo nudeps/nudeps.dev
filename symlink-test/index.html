@@ -4,59 +4,264 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Symlink support test</title>
 <style>
-	body { font: 16px/1.5 system-ui, sans-serif; max-width: 60rem; margin: 2rem auto; padding: 0 1rem; }
-	table { border-collapse: collapse; width: 100%; }
-	th, td { text-align: left; padding: .4rem .6rem; border-bottom: 1px solid #ccc; vertical-align: top; }
-	code { background: #f3f3f3; padding: .1em .3em; border-radius: 3px; }
-	caption { text-align: left; color: #666; margin-bottom: .5rem; }
+	body { font: 16px/1.5 system-ui, sans-serif; max-width: 70rem; margin: 2rem auto; padding: 0 1rem; }
+	h1 { margin-bottom: .2rem; }
+	.intro { color: #555; margin-top: 0; }
+	h2 { margin: 2rem 0 .5rem; font-size: 1.1rem; }
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+		gap: 1rem;
+	}
+
+	.card {
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		background: #fff;
+		--accent: #ccc;
+		border-color: var(--accent);
+	}
+	.card[data-state="pass"] { --accent: #2e7d32; }
+	.card[data-state="fail"] { --accent: #c62828; }
+	.card[data-state="warn"] { --accent: #ef6c00; }
+
+	.head {
+		display: flex;
+		align-items: center;
+		gap: .5rem;
+		padding: .5rem .6rem;
+		background: color-mix(in srgb, var(--accent) 12%, #fff);
+		border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, #fff);
+	}
+	.head input { width: 1.1rem; height: 1.1rem; flex: none; cursor: pointer; }
+	.head a { font-weight: 600; word-break: break-all; flex: 1; }
+
+	.badge {
+		flex: none;
+		font-size: .72rem;
+		font-weight: 600;
+		padding: .12em .5em;
+		border-radius: 999px;
+		color: #fff;
+		background: #999;
+		white-space: nowrap;
+	}
+	.card[data-state="pass"] .badge { background: #2e7d32; }
+	.card[data-state="fail"] .badge { background: #c62828; }
+	.card[data-state="warn"] .badge { background: #ef6c00; }
+
+	.meta { padding: .4rem .6rem; font-size: .82rem; color: #555; }
+	.meta code { background: #f3f3f3; padding: .05em .3em; border-radius: 3px; word-break: break-all; }
+	.meta .type { display: block; margin-top: .2rem; color: #777; }
+	.meta .verdict { display: block; margin-top: .3rem; color: #333; }
+
+	iframe {
+		width: 100%;
+		height: 9rem;
+		border: 0;
+		border-top: 1px solid #e3e3e3;
+		background: repeating-conic-gradient(#fafafa 0% 25%, #fff 0% 50%) 0 / 16px 16px;
+	}
+
+	.toolbar { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin: 1rem 0; color: #555; }
+	button { font: inherit; padding: .3rem .7rem; border: 1px solid #bbb; border-radius: 6px; background: #fff; cursor: pointer; }
 </style>
 
 <h1>Symlink support test</h1>
-<p>Each row is a symlink in this directory. Click to see how Netlify serves it (200 with target contents, 404, redirect, etc.).</p>
+<p class="intro">Each card fetches a symlink (same-origin) to auto-detect whether Netlify <strong>followed</strong> it to the target's content, served the <strong>raw symlink path</strong>, or <strong>didn't serve</strong> it. The iframe shows the rendered result. Tick a checkbox to manually override the auto-verdict; manual state is saved locally.</p>
 
-<table>
-	<caption>Symlinks pointing within this directory</caption>
-	<thead><tr><th>Link</th><th>Stored target</th><th>Type</th></tr></thead>
-	<tbody>
-		<tr><td><a href="rel-file-link">rel-file-link</a></td><td><code>real-file.txt</code></td><td>Relative → file</td></tr>
-		<tr><td><a href="dot-rel-link">dot-rel-link</a></td><td><code>./real-file.txt</code></td><td>Relative (<code>./</code>) → file</td></tr>
-		<tr><td><a href="abs-file-link">abs-file-link</a></td><td><code>/Users/…/symlink-test/real-file.txt</code></td><td>Absolute → file</td></tr>
-		<tr><td><a href="rel-dir-link/inner.txt">rel-dir-link/</a></td><td><code>real-dir</code></td><td>Relative → directory</td></tr>
-		<tr><td><a href="abs-dir-link/inner.txt">abs-dir-link/</a></td><td><code>/Users/…/symlink-test/real-dir</code></td><td>Absolute → directory</td></tr>
-		<tr><td><a href="rel-dir-link/">rel-dir-link/ (index)</a></td><td><code>real-dir</code> → <code>index.html</code></td><td>Dir symlink, default index</td></tr>
-		<tr><td><a href="html-link.html">html-link.html</a></td><td><code>real-page.html</code></td><td>Relative → <code>.html</code> file</td></tr>
-	</tbody>
-</table>
+<div class="toolbar">
+	<span id="score"></span>
+	<button id="rerun">Re-run auto-test</button>
+	<button id="reset">Reset overrides</button>
+</div>
 
-<table>
-	<caption>Chained symlinks (symlink → symlink → …)</caption>
-	<thead><tr><th>Link</th><th>Stored target</th><th>Type</th></tr></thead>
-	<tbody>
-		<tr><td><a href="chain-link">chain-link</a></td><td><code>rel-file-link</code></td><td>2 hops → file</td></tr>
-		<tr><td><a href="chain-link-2">chain-link-2</a></td><td><code>chain-link</code></td><td>3 hops → file</td></tr>
-		<tr><td><a href="dir-chain-link/inner.txt">dir-chain-link/</a></td><td><code>rel-dir-link</code></td><td>Symlink → dir symlink</td></tr>
-	</tbody>
-</table>
+<div id="root"></div>
 
-<table>
-	<caption>Symlinks escaping this directory</caption>
-	<thead><tr><th>Link</th><th>Stored target</th><th>Type</th></tr></thead>
-	<tbody>
-		<tr><td><a href="parent-file-link">parent-file-link</a></td><td><code>../index.html</code></td><td>Relative → sibling (in publish dir)</td></tr>
-		<tr><td><a href="parent-abs-link">parent-abs-link</a></td><td><code>/Users/…/nudeps.dev/index.html</code></td><td>Absolute → sibling (in publish dir)</td></tr>
-		<tr><td><a href="escape-rel-link">escape-rel-link</a></td><td><code>../../package.json</code></td><td>Relative → above repo root</td></tr>
-		<tr><td><a href="external-abs-link">external-abs-link</a></td><td><code>/etc/hosts</code></td><td>Absolute → outside repo entirely</td></tr>
-	</tbody>
-</table>
+<script type="module">
+// Each item: marker = a substring proving the target was followed; null = expected to FAIL
+// (broken/cyclic), so success means it does NOT serve. raw = the exact stored symlink
+// target, used to detect Netlify serving the symlink blob verbatim instead of following it.
+const groups = [
+	{
+		title: "Within the directory",
+		items: [
+			{ name: "rel-file-link", href: "rel-file-link", raw: "real-file.txt", marker: "real regular file", type: "Relative → file" },
+			{ name: "dot-rel-link", href: "dot-rel-link", raw: "./real-file.txt", marker: "real regular file", type: "Relative (./) → file" },
+			{ name: "abs-file-link", href: "abs-file-link", raw: "/Users/leaverou/Documents/gh/nudeps/nudeps.dev/symlink-test/real-file.txt", marker: "real regular file", type: "Absolute → file" },
+			{ name: "rel-dir-link", href: "rel-dir-link/", raw: "real-dir", marker: "real-dir/index.html", type: "Relative → directory (index)" },
+			{ name: "abs-dir-link", href: "abs-dir-link/inner.txt", raw: "/Users/leaverou/Documents/gh/nudeps/nudeps.dev/symlink-test/real-dir", marker: "real file inside real-dir", type: "Absolute → directory" },
+			{ name: "html-link.html", href: "html-link.html", raw: "real-page.html", marker: "real HTML page", type: "Relative → .html file" },
+		],
+	},
+	{
+		title: "Chained symlinks",
+		items: [
+			{ name: "chain-link", href: "chain-link", raw: "rel-file-link", marker: "real regular file", type: "2 hops → file" },
+			{ name: "chain-link-2", href: "chain-link-2", raw: "chain-link", marker: "real regular file", type: "3 hops → file" },
+			{ name: "dir-chain-link", href: "dir-chain-link/inner.txt", raw: "rel-dir-link", marker: "real file inside real-dir", type: "Symlink → dir symlink" },
+			{ name: "real-dir/up-link", href: "real-dir/up-link", raw: "../real-file.txt", marker: "real regular file", type: "Symlink inside subdir → up" },
+		],
+	},
+	{
+		title: "Escaping the directory",
+		items: [
+			{ name: "parent-file-link", href: "parent-file-link", raw: "../index.html", marker: "Symlink support test", type: "Relative → sibling (publish dir)" },
+			{ name: "parent-abs-link", href: "parent-abs-link", raw: "/Users/leaverou/Documents/gh/nudeps/nudeps.dev/index.html", marker: "Symlink support test", type: "Absolute → sibling (publish dir)" },
+			{ name: "escape-rel-link", href: "escape-rel-link", raw: "../../package.json", marker: "\"name\"", type: "Relative → above repo root" },
+			{ name: "external-abs-link", href: "external-abs-link", raw: "/etc/hosts", marker: "localhost", type: "Absolute → outside repo" },
+		],
+	},
+	{
+		title: "Broken / cyclic (expected to fail)",
+		items: [
+			{ name: "broken-link", href: "broken-link", raw: "does-not-exist.txt", marker: null, type: "Dangling" },
+			{ name: "self-loop", href: "self-loop", raw: "self-loop", marker: null, type: "Self-referential loop" },
+			{ name: "circular-a", href: "circular-a", raw: "circular-b", marker: null, type: "Circular (a→b→a)" },
+			{ name: "circular-b", href: "circular-b", raw: "circular-a", marker: null, type: "Circular (b→a→b)" },
+		],
+	},
+];
 
-<table>
-	<caption>Broken / cyclic symlinks (expected to fail)</caption>
-	<thead><tr><th>Link</th><th>Stored target</th><th>Type</th></tr></thead>
-	<tbody>
-		<tr><td><a href="broken-link">broken-link</a></td><td><code>does-not-exist.txt</code></td><td>Dangling</td></tr>
-		<tr><td><a href="self-loop">self-loop</a></td><td><code>self-loop</code></td><td>Self-referential loop</td></tr>
-		<tr><td><a href="circular-a">circular-a</a></td><td><code>circular-b</code></td><td>Circular (a→b→a)</td></tr>
-		<tr><td><a href="circular-b">circular-b</a></td><td><code>circular-a</code></td><td>Circular (b→a→b)</td></tr>
-	</tbody>
-</table>
+const STORAGE_KEY = "symlink-test-overrides";
+// Manual overrides only: { [name]: true|false }. Absent ⇒ use auto-verdict.
+const overrides = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+const allItems = groups.flatMap(g => g.items);
+const cards = new Map(); // name -> card element
+
+// Build the cards.
+const root = document.querySelector("#root");
+for (const group of groups) {
+	const h2 = document.createElement("h2");
+	h2.textContent = group.title;
+	root.append(h2);
+
+	const grid = document.createElement("div");
+	grid.className = "grid";
+
+	for (const item of group.items) {
+		const card = document.createElement("div");
+		card.className = "card";
+		card.innerHTML = `
+			<label class="head">
+				<input type="checkbox" data-name="${item.name}">
+				<a href="${item.href}" target="_blank" rel="noopener">${item.name}</a>
+				<span class="badge">…</span>
+			</label>
+			<div class="meta">
+				→ <code>${item.raw}</code>
+				<span class="type">${item.type}</span>
+				<span class="verdict">Testing…</span>
+			</div>
+			<iframe src="${item.href}" loading="lazy" title="${item.name}"></iframe>`;
+		grid.append(card);
+		cards.set(item.name, card);
+	}
+	root.append(grid);
+}
+
+// Fetch a URL same-origin and classify the outcome against the item's expectations.
+// Returns { state: "pass"|"fail"|"warn", badge, verdict, ok } where `ok` is the
+// boolean "this behaved as desired" used to auto-tick the checkbox.
+async function classify (item) {
+	let res, body = "";
+	try {
+		res = await fetch(item.href, { redirect: "follow" });
+		body = await res.text();
+	}
+	catch (error) {
+		// Network-level failure (e.g. fetch threw). For broken links that's success.
+		if (item.marker === null) {
+			return { state: "pass", badge: "fails ✓", verdict: `Request failed (${error.name}) — correctly not served`, ok: true };
+		}
+		return { state: "fail", badge: "error", verdict: `Request failed: ${error.message}`, ok: false };
+	}
+
+	const status = res.status;
+	const where = res.redirected ? ` (redirected to ${new URL(res.url).pathname})` : "";
+
+	// Broken/cyclic: success = NOT served.
+	if (item.marker === null) {
+		if (!res.ok) {
+			return { state: "pass", badge: `${status} ✓`, verdict: `${status} — correctly not served${where}`, ok: true };
+		}
+		const raw = body.trim() === item.raw.trim();
+		return { state: "warn", badge: `${status} ⚠`, verdict: `${status} — unexpectedly served${raw ? " (raw symlink path)" : ""}${where}`, ok: false };
+	}
+
+	// Should-follow links.
+	if (!res.ok) {
+		return { state: "fail", badge: `${status}`, verdict: `${status} — not served${where}`, ok: false };
+	}
+	if (body.includes(item.marker)) {
+		return { state: "pass", badge: `${status} followed`, verdict: `${status} — followed to target content${where}`, ok: true };
+	}
+	if (body.trim() === item.raw.trim()) {
+		return { state: "warn", badge: `${status} raw`, verdict: `${status} — served raw symlink path, not followed${where}`, ok: false };
+	}
+	return { state: "warn", badge: `${status} ?`, verdict: `${status} — served, but content didn't match target${where}`, ok: false };
+}
+
+// Apply a classification result to a card, honoring any manual override.
+function render (item, result) {
+	const card = cards.get(item.name);
+	const box = card.querySelector("input");
+	const overridden = item.name in overrides;
+	const checked = overridden ? overrides[item.name] : result.ok;
+
+	box.checked = checked;
+	card.dataset.state = overridden ? (checked ? "pass" : "fail") : result.state;
+	card.querySelector(".badge").textContent = result.badge;
+	card.querySelector(".verdict").textContent = result.verdict + (overridden ? " · manual override" : "");
+}
+
+const score = document.querySelector("#score");
+function updateScore () {
+	const pass = [...cards.values()].filter(c => c.dataset.state === "pass").length;
+	score.textContent = `${pass} / ${allItems.length} working as desired`;
+}
+
+// Run the full auto-test.
+async function run () {
+	score.textContent = "Testing…";
+	await Promise.all(allItems.map(async item => render(item, await classify(item))));
+	updateScore();
+}
+
+// Manual override toggles.
+root.addEventListener("change", e => {
+	if (!e.target.matches("input[type=checkbox]")) {
+		return;
+	}
+	const name = e.target.dataset.name;
+	overrides[name] = e.target.checked;
+	localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+	const card = cards.get(name);
+	card.dataset.state = e.target.checked ? "pass" : "fail";
+	card.querySelector(".verdict").textContent += " · manual override";
+	updateScore();
+});
+
+document.querySelector("#rerun").addEventListener("click", () => {
+	for (const f of document.querySelectorAll("iframe")) {
+		f.src = f.src;
+	}
+	run();
+});
+
+document.querySelector("#reset").addEventListener("click", () => {
+	localStorage.removeItem(STORAGE_KEY);
+	for (const k in overrides) {
+		delete overrides[k];
+	}
+	run();
+});
+
+run();
+</script>
 </html>
