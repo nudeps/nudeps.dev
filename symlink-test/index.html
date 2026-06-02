@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Symlink support test</title>
+<style>
+	body { font: 16px/1.5 system-ui, sans-serif; max-width: 60rem; margin: 2rem auto; padding: 0 1rem; }
+	table { border-collapse: collapse; width: 100%; }
+	th, td { text-align: left; padding: .4rem .6rem; border-bottom: 1px solid #ccc; vertical-align: top; }
+	code { background: #f3f3f3; padding: .1em .3em; border-radius: 3px; }
+	caption { text-align: left; color: #666; margin-bottom: .5rem; }
+</style>
+
+<h1>Symlink support test</h1>
+<p>Each row is a symlink in this directory. Click to see how Netlify serves it (200 with target contents, 404, redirect, etc.).</p>
+
+<table>
+	<caption>Symlinks pointing within this directory</caption>
+	<thead><tr><th>Link</th><th>Stored target</th><th>Type</th></tr></thead>
+	<tbody>
+		<tr><td><a href="rel-file-link">rel-file-link</a></td><td><code>real-file.txt</code></td><td>Relative → file</td></tr>
+		<tr><td><a href="dot-rel-link">dot-rel-link</a></td><td><code>./real-file.txt</code></td><td>Relative (<code>./</code>) → file</td></tr>
+		<tr><td><a href="abs-file-link">abs-file-link</a></td><td><code>/Users/…/symlink-test/real-file.txt</code></td><td>Absolute → file</td></tr>
+		<tr><td><a href="rel-dir-link/inner.txt">rel-dir-link/</a></td><td><code>real-dir</code></td><td>Relative → directory</td></tr>
+		<tr><td><a href="abs-dir-link/inner.txt">abs-dir-link/</a></td><td><code>/Users/…/symlink-test/real-dir</code></td><td>Absolute → directory</td></tr>
+		<tr><td><a href="rel-dir-link/">rel-dir-link/ (index)</a></td><td><code>real-dir</code> → <code>index.html</code></td><td>Dir symlink, default index</td></tr>
+		<tr><td><a href="html-link.html">html-link.html</a></td><td><code>real-page.html</code></td><td>Relative → <code>.html</code> file</td></tr>
+	</tbody>
+</table>
+
+<table>
+	<caption>Chained symlinks (symlink → symlink → …)</caption>
+	<thead><tr><th>Link</th><th>Stored target</th><th>Type</th></tr></thead>
+	<tbody>
+		<tr><td><a href="chain-link">chain-link</a></td><td><code>rel-file-link</code></td><td>2 hops → file</td></tr>
+		<tr><td><a href="chain-link-2">chain-link-2</a></td><td><code>chain-link</code></td><td>3 hops → file</td></tr>
+		<tr><td><a href="dir-chain-link/inner.txt">dir-chain-link/</a></td><td><code>rel-dir-link</code></td><td>Symlink → dir symlink</td></tr>
+	</tbody>
+</table>
+
+<table>
+	<caption>Symlinks escaping this directory</caption>
+	<thead><tr><th>Link</th><th>Stored target</th><th>Type</th></tr></thead>
+	<tbody>
+		<tr><td><a href="parent-file-link">parent-file-link</a></td><td><code>../index.html</code></td><td>Relative → sibling (in publish dir)</td></tr>
+		<tr><td><a href="parent-abs-link">parent-abs-link</a></td><td><code>/Users/…/nudeps.dev/index.html</code></td><td>Absolute → sibling (in publish dir)</td></tr>
+		<tr><td><a href="escape-rel-link">escape-rel-link</a></td><td><code>../../package.json</code></td><td>Relative → above repo root</td></tr>
+		<tr><td><a href="external-abs-link">external-abs-link</a></td><td><code>/etc/hosts</code></td><td>Absolute → outside repo entirely</td></tr>
+	</tbody>
+</table>
+
+<table>
+	<caption>Broken / cyclic symlinks (expected to fail)</caption>
+	<thead><tr><th>Link</th><th>Stored target</th><th>Type</th></tr></thead>
+	<tbody>
+		<tr><td><a href="broken-link">broken-link</a></td><td><code>does-not-exist.txt</code></td><td>Dangling</td></tr>
+		<tr><td><a href="self-loop">self-loop</a></td><td><code>self-loop</code></td><td>Self-referential loop</td></tr>
+		<tr><td><a href="circular-a">circular-a</a></td><td><code>circular-b</code></td><td>Circular (a→b→a)</td></tr>
+		<tr><td><a href="circular-b">circular-b</a></td><td><code>circular-a</code></td><td>Circular (b→a→b)</td></tr>
+	</tbody>
+</table>
+</html>
