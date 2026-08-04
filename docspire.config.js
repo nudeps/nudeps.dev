@@ -10,6 +10,7 @@ export default {
 	logo: "/wordmark.svg",
 	icon: "/logo.svg",
 	version: nudeps.version,
+	repo: nudeps.repository.url,
 	input: "docs",
 	deleteOutput: true,
 	plugins: [
