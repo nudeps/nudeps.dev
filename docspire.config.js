@@ -11,6 +11,9 @@ export default {
 	icon: "/logo.svg",
 	version: nudeps.version,
 	repo: nudeps.repository.url,
+	editLink: {
+		pattern: "https://github.com/nudeps/nudeps.dev/edit/main/:path",
+	},
 	input: "docs",
 	deleteOutput: true,
 	plugins: [
