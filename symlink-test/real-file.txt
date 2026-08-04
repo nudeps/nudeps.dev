@@ -1,1 +1,0 @@
-I am a real regular file inside symlink-test.
