@@ -10,7 +10,7 @@ export default {
 	logo: "/wordmark.svg",
 	icon: "/logo.svg",
 	version: nudeps.version,
-	repo: nudeps.repository.url,
+	repo: "https://github.com/nudeps/nudeps",
 	editLink: {
 		pattern: "https://github.com/nudeps/nudeps.dev/edit/main/:path",
 	},
