@@ -1,0 +1,5 @@
+/* Only the hue matters: every tint is derived from it by the oklch() math in Docspire's color tokens. */
+:where(:root) {
+	/* --color-base: #eab67d; */
+	--color-accent: #6f9dc8;
+}

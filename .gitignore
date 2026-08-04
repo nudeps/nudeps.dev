@@ -1,3 +1,6 @@
 # Local Netlify folder
 .netlify
 package-lock.json
+
+_site
+importmap.js

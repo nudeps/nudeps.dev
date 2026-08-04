@@ -1,12 +1,24 @@
 {
-  "type": "module",
-  "devDependencies": {
-    "nudeps": "latest"
-  },
-  "scripts": {
-    "prepare": "npx nudeps",
-    "dependencies": "npx nudeps",
-    "build": "./demos/each.sh 'npm install'",
-    "update:submodule": "git submodule update --remote"
-  }
+	"name": "nudeps.dev",
+	"description": "Source for nudeps.dev",
+	"private": true,
+	"type": "module",
+	"homepage": "https://nudeps.dev",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nudeps/nudeps.dev.git"
+	},
+	"license": "MIT",
+	"scripts": {
+		"build": "npm run build:demos && docspire && npm run copy:demos",
+		"build:demos": "demos/each.sh 'npm install'",
+		"copy:demos": "rsync -a --exclude node_modules demos/ _site/demos/",
+		"serve": "docspire --serve",
+		"watch": "docspire --watch",
+		"update:submodule": "git submodule update --remote"
+	},
+	"devDependencies": {
+		"docspire": "^0",
+		"nudeps": "latest"
+	}
 }
