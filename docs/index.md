@@ -40,6 +40,8 @@ testimonials:
     quote: "I ran the npx command and added the import map to my app, but I assumed that there was still a lot more work to do. I was shocked to realize I was done."
     title: Technical writer and Svelte developer
     image: https://cdn.bsky.app/img/avatar/plain/did:plc:7a4dbiurb44vggsynafivdpd/bafkreiet46lkur7446ds35nvx27wwlmxhu7hzwh2z2tk7vxwl5tzc346q4
+  - name: James Stuckey Weber
+    quote: "Nudeps is how I want to build for the web. It helps make sure my time is spent adding features, rather than wrangling build steps."
 ---
 
 ## Try it
