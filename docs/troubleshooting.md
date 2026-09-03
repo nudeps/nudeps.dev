@@ -19,7 +19,7 @@ Before investigating further:
 ## Package assumes a bundler is being used
 
 Some packages don't just use specifiers — they actively assume that if they can use specifiers, it _must_ mean that a bundler is being used and that the environment is NodeJS or similar.
-For popular packages, we use [JSPM's override registry](https://github.com/jspm/overrides) but for less well-known packages, you may need to use a custom override through the [`overrides`](/config/#overrides) option.
+For popular packages, we use [JSPM's override registry](https://github.com/jspm/overrides) but for less well-known packages, you may need to remap entries yourself through the [`imports`](/config/#imports) option.
 
 Another option is to stub NodeJS objects like `process`.
 This can work if the surface area is limited, but it can quickly turn into a game of whack-a-mole. Additionally, it can cause bugs in other packages that depend on the presence of these objects to _detect_ NodeJS.

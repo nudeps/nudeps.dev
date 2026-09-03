@@ -10,53 +10,38 @@ For example, `client_modules/open-props` will point to `client_modules/open-prop
 
 This lets you use stable paths like `client_modules/open-props/open-props.min.css` in your HTML and CSS.
 
-By default, `alias` is `true`, which creates an unversioned symlink for every package using its install name (generally the same as the package name, except for [npm aliases](https://docs.npmjs.com/cli/v11/using-npm/package-spec#aliases)).
+By default, `alias` is `true`, which creates an unversioned symlink for every direct dependency using its install name (generally the same as the package name, except for [npm aliases](https://docs.npmjs.com/cli/v11/using-npm/package-spec#aliases)).
 Set `alias: false` to opt out entirely.
 
 > [!NOTE]
-> Hosts without symlink support (Netlify, Cloudflare Pages) get redirect rules instead, written to `_redirects` in your [`publishDir`](/config/#publishdir).
+> Hosts without symlink support (Netlify, Cloudflare Pages) get redirect rules instead, written to `_redirects` in your [`root`](/config/#root).
 
-## Forms
+## Values
 
-**Boolean** to set globally for all packages. Note that `alias: true` will _only_ create aliases for direct dependencies, not transitive dependencies. If you also want to alias transitive dependencies, you need to use one of the more granular forms.
+- `true` — alias the package at its install name. Globally, this covers direct dependencies only (transitive duplicates at other versions are skipped).
+- `false` — no alias.
+- A string — a custom alias **path, relative to the package's [`dir`](/config/#dir)**. It may escape `dir`: `"../open-props"` places the alias at the project root, so `<link href="open-props/open-props.min.css">` works from your HTML.
 
-**String** — alias a single package by name:
-
-```js
-alias: "open-props";
-```
-
-**Function** — dynamically determine based on package metadata.
-For example, to alias every package to its unversioned name (even transitive dependencies, which are not included by `alias: true`), you can use:
+Scope values to packages via [override rules](/config/overrides/):
 
 ```js
-alias: ({ installName }) => installName;
+export default {
+	overrides: {
+		"open-props": { alias: "../open-props" }, // alias at the project root
+		"tailwindcss": { alias: "tw" },           // custom name inside dir
+		"lodash": { alias: false },               // no alias for this one
+	},
+};
 ```
 
-**Array** — specify a list of packages to alias:
+Rules also reach transitive dependencies (which `alias: true` alone does not):
 
 ```js
-alias: ["open-props", "tailwindcss"];
+export default {
+	overrides: [{ name: /./, alias: true }], // alias everything, even transitive deps
+};
 ```
 
-**Object** — map package names to custom alias paths:
+When an alias is removed from the config (or its package is uninstalled), the symlink is automatically cleaned up on the next run — including aliases outside `dir`.
 
-```js
-alias: {
-	"open-props": "open-props",
-	"tailwindcss": "tw",
-}
-```
-
-Functions can also be used as object values for per-package logic:
-
-```js
-alias: {
-	"open-props": ({version}) => `open-props-v${version.split(".")[0]}`,
-}
-```
-
-When an alias is removed from the config (or its package is uninstalled), the symlink is automatically cleaned up on the next run.
-
-> **npm aliases:** When using npm aliases (e.g. `npm install my-props@npm:open-props`), string and object forms match against both the install name (`my-props`) and the real package name (`open-props`), with install name taking priority in object lookups.
-> Function forms receive both as `{ packageName, version, installName, isExternal }`, letting you distinguish multiple installs of the same package.
+> **npm aliases:** When using npm aliases (e.g. `npm install my-props@npm:open-props`), dictionary keys match against both the install name (`my-props`) and the real package name (`open-props`); in the rule form, match `name` or `installName` explicitly to distinguish multiple installs of the same package (optionally filtered by `version`).
