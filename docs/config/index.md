@@ -18,6 +18,33 @@ Unknown or invalid options fail loudly: typos get a "did you mean" suggestion, i
 
 Top-level values are global; the [`overrides`](/config/overrides/) option scopes any package-scoped option (marked below) to specific packages, versions, or modes.
 
+## At a glance
+
+| Option                                          | Default                        | CLI                       | Per-package | What it does                                                     |
+| ----------------------------------------------- | ------------------------------ | ------------------------- | :---------: | ---------------------------------------------------------------- |
+| [`dir`](#dir)                                   | `./client_modules`             | `--dir`, `-d`             |     ✅      | Where packages are materialized                                  |
+| [`map`](#map)                                   | `importmap.js`                 | `--map`, `-o`             |             | Import map injection script path                                 |
+| [`root`](#root)                                 | Workspace root                 | `--root`                  |             | Directory the host serves as `/`                                 |
+| [`module`](#module)                             | `false`                        | `--module`                |             | Load the map script as `type="module"`                           |
+| [`terse`](#terse)                               | `false`                        | `--terse`                 |             | Minify the map script                                            |
+| [`prune`](#prune)                               | `false`                        | `--prune`                 |             | Keep only specifiers the entry points use                        |
+| [`include`](/config/overrides/#include)         | —                              |                           | ✅ (only)   | Direct-install membership: `"force"` \| `true` \| `false`        |
+| [`ignore`](#ignore)                             | Readmes, dotfiles, pkg files   |                           |     ✅      | File globs to skip when copying                                  |
+| [`imports`](#imports)                           | —                              |                           |     ✅      | Import map entries merged into the generated map                 |
+| [`cjs`](#cjs)                                   | `true`                         | `--cjs`                   |     ✅      | Shim CommonJS packages                                           |
+| [`subpaths`](#subpaths)                         | `"split"`                      | `--subpaths`              |             | Collapse subpath mappings: `"split"` \| `"combined"` \| `"both"` |
+| [`symlink`](#symlink)                           | External deps only             | `--symlink`               |     ✅      | Symlink packages instead of copying                              |
+| [`preserveSymlinks`](#preservesymlinks)         | `false`                        | `--preserveSymlinks`      |     ✅      | Keep symlinks inside copied packages                             |
+| [`alias`](#alias)                               | `true`                         | `--alias`                 |     ✅      | Unversioned stable paths to packages                             |
+| [`overrides`](/config/overrides/)               | —                              |                           |             | Conditional rules: per package, mode, version                    |
+| [`host`](#host)                                 | Auto-detected                  | `--host`                  |             | Deploy host adapter                                              |
+| [`mode`](#mode)                                 | —                              | `--mode`, `-m`            |             | Active mode, tested by rules                                     |
+| [`hooks`](#hooks)                               | —                              |                           |             | Lifecycle hook callbacks                                         |
+| [`config`](#config)                             | `nudeps.js`                    | `--config`, `-c`          |             | Config file path                                                 |
+| [`init`](/cli/)                                 | `false`                        | `--init`                  |             | Full re-initialization: clear caches, regenerate                 |
+
+"Per-package" = settable from a package-matched [override rule](/config/overrides/); an empty CLI cell means config file (or programmatic) only.
+
 ## Output
 
 ### `dir`
@@ -152,7 +179,7 @@ Corresponds to the [`combineSubpaths` option of `@jspm/generator`](https://jspm.
 
 ### `symlink`
 
-Config file only · Default: symlink [local dependencies](/local-deps/), copy the rest · Package-scoped
+`--symlink` · Default: symlink [local dependencies](/local-deps/), copy the rest · Package-scoped
 
 Whether to symlink a package into `dir` instead of copying it.
 Symlinking means edits to a local dependency are visible immediately, with no re-copy.
@@ -163,7 +190,7 @@ Symlinking means edits to a local dependency are visible immediately, with no re
 
 ### `preserveSymlinks`
 
-Config file only · Default: `false` · Package-scoped
+`--preserveSymlinks` · Default: `false` · Package-scoped
 
 Whether to keep symlinks found *inside* a package as-is when copying it, rather than dereferencing them to real files.
 Scope to specific packages via [override rules](/config/overrides/).
