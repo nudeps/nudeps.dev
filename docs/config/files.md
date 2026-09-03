@@ -13,17 +13,25 @@ Since files are only fetched when used, this does not impact actual bandwidth us
 And if you're trusting a package to run JS in your domain anyway, the additional risk from copying its entire package directory is tiny.
 
 That said, there are cases where you _know_ you won't need certain files.
-You can add additional globs (per Node's native glob syntax) to be included or excluded by providing globs to the `ignore` option.
+You can add globs (per Node's native glob syntax) via the `ignore` option.
 Its value can be either an array or a singular value.
-Each glob can be provided as a raw string (glob to exclude) or an object with an `include` or `exclude` property.
-The values of these properties can also be arrays of strings or objects.
+Each entry is a raw string (a glob to ignore) or an object with an `ignore` or `copy` property.
 Globs are relative to the package root.
 
-The semantics are similar to a `.gitignore` file, meaning that negative globs can only undo globs that precede them.
+The semantics are similar to a `.gitignore` file: the **last matching entry wins**, so a `copy` glob can only undo `ignore` globs that precede it.
+Your entries come after the built-in defaults, which means reversing a default *is* the opt-out:
 
-For example:
+- To include `package.json` files: `ignore: { copy: "package.json" }`.
+- To only copy `*.js` files and nothing else: `ignore: [{ ignore: "**/*" }, { copy: "**/*.js" }]` (but see above why this is not recommended).
 
-- To include `package.json` files you'd use `ignore: { include: "package.json" }`.
-- To only copy `*.js` files and nothing else you'd use `ignore: [{ exclude: "**/*" }, { include: "**/*.js" } ]` (but see above why this is not recommended).
+Files that the import map explicitly maps are never ignored.
 
-To restrict rules to specific packages, you can provide the rule as an object and add one or more (as an array) package names via the `packageName` property.
+To restrict globs to specific packages, put them in an [override rule](/config/overrides/) — a rule's `ignore` appends to the global list for the packages it matches:
+
+```js
+export default {
+	overrides: {
+		"leaflet": { ignore: "docs/**" },
+	},
+};
+```

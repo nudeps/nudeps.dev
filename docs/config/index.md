@@ -12,17 +12,22 @@ export default {
 };
 ```
 
-**Priority:** CLI args override config file values, which override [mode](/config/modes/) defaults, which override hard defaults.
+**Priority** (weakest to strongest): hard defaults → built-in mode presets → config file values → matching [override rules](/config/overrides/) → CLI args.
+
+Unknown or invalid options fail loudly: typos get a "did you mean" suggestion, invalid values report which layer supplied them, and options from previous versions point at their replacement.
+
+Top-level values are global; the [`overrides`](/config/overrides/) option scopes any package-scoped option (marked below) to specific packages, versions, or modes.
 
 ## Output
 
 ### `dir`
 
-`--dir`, `-d` · Default: `./client_modules`
+`--dir`, `-d` · Default: `./client_modules` · Package-scoped
 
 Directory to copy deployed dependencies to, relative to project root.
 It will be created if it does not exist.
 It is assumed that Nudeps owns this directory, do not use a directory path that you use for other things.
+Overriding it per package via a rule materializes just that package elsewhere (the import map follows).
 
 ### `map`
 
@@ -31,9 +36,9 @@ It is assumed that Nudeps owns this directory, do not use a directory path that 
 File path for import map injection script, relative to project root.
 Nudeps needs to be able to own this file, do not input a file you use for other things too.
 
-### `publishDir`
+### `root`
 
-`--publish-dir` · Default: workspace root
+`--root` · Default: workspace root
 
 The directory your host serves as `/`.
 Hosts without symlink support (Netlify, Cloudflare) express [aliases](/config/aliases/) as redirect rules, which need URLs rather than file paths — so set this when `dir` lives inside a build output directory (e.g. an SSG's `dist/`), or the rules will be written outside the deployed site and will not match.
@@ -51,7 +56,7 @@ Please note that **this will reduce browser support**, as certain browsers do no
 `--terse` · Default: `false`
 
 Terser import map injection script (compact JSON, no error checks, reduced whitespace).
-Enabled by default in [`prod` mode](/config/modes/).
+Enabled by default in [`prod` mode](/config/overrides/#modes).
 
 ## What gets included
 
@@ -60,62 +65,86 @@ Enabled by default in [`prod` mode](/config/modes/).
 `--prune` · Default: `false`
 
 Whether to subset only to specifiers used by the package entry points (`true`), or include all direct dependencies anyway.
+Packages with [`include: "force"`](/config/overrides/#include) survive pruning.
 See [Pruning](/cli/#pruning).
 
-### `exclude`
+### `include`
 
-`--exclude`, `-e` · Default: `[]`
+Rule-only (inside [`overrides`](/config/overrides/#include))
 
-Any packages to exclude from the import map even though they appear in `dependencies`.
-Useful for server-side dependencies.
-When providing via the command line option, comma-separate and do not include any spaces.
-They will still be included if actively used in your code.
+One setting for direct-install membership, replacing separate add/force/exclude lists:
+`true` installs a package like a dependency even if unlisted (prunable), `"force"` also survives `prune`, `false` removes a package from direct installs, and `undefined` restores standard behavior.
 
-### `additionalDependencies`
+```js
+export default {
+	overrides: {
+		"canvas-confetti": { include: true },
+		"my-design-system": { include: "force" },
+		"@netlify/blobs": { include: false }, // server-side dep
+	},
+};
+```
 
-Config file only · Default: `[]`
-
-Extra packages to add to the import map beyond your `dependencies` — e.g. a tool (such as a static site generator) calling nudeps [programmatically](/api/) can inject its own client-side libraries.
-Treated exactly like `dependencies` (installed unless pruned, subject to `exclude`); a no-op for anything already in `dependencies`.
-
-### `forceDependencies`
-
-Config file only · Default: `[]`
-
-Like `additionalDependencies`, but **not** subject to pruning: these packages stay in the import map even when `prune` is `true`.
-Use for packages you always want available regardless of whether your entry points reference them.
-Still subject to `exclude` — a package listed in both is excluded, with a warning.
+Note that `include: false` does not guarantee absence from the map: a package actively imported by your code still gets mapped.
 
 ### `ignore`
 
-Config file only
+Config file only · Package-scoped
 
 Any files to exclude from being copied to the target directory.
 See [Deployed files](/config/files/).
 
 ## Resolution
 
-### `overrides`
+### `imports`
 
-Config file only · Default: `{}`
+Config file only · Package-scoped
 
-Overrides for the import map, using `./node_modules/` paths.
-Set a key to `undefined` to remove it from the map.
+Import map entries deep-merged into the generated map, using the platform's own [`imports`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap#imports) shape: keys are specifiers, values are paths relative to the map file (or full URLs).
+Set a value to `undefined` to remove an entry from the map.
+
+```js
+export default {
+	imports: {
+		lodash: "./vendor/lodash.js",
+	},
+};
+```
+
+Inside a [package rule](/config/overrides/), values are **package-relative** paths instead, resolved against the package's versioned directory — no `node_modules` paths needed:
+
+```js
+export default {
+	overrides: {
+		"colorjs.io": {
+			imports: {
+				"colorjs.io/fn": "./src/index-fn.js",
+				"colorjs.io/src/": "./src/",
+			},
+		},
+	},
+};
+```
 
 ### `cjs`
 
-`--cjs` · Default: `true`
+`--cjs` · Default: `true` · Package-scoped
 
 Whether to add a CommonJS shim to the import map if any CJS packages are detected.
 Setting to `false` will omit both the shim and these packages from the import map.
+Override per package for misdetected packages.
 See [How are CJS packages handled?](/faq/#how-are-cjs-commonjs-packages-handled)
 
-### `combineSubpaths`
+### `subpaths`
 
-Config file only · Default: `false`
+`--subpaths` · Default: `"split"`
 
-Whether to collapse multiple subpath entries for the same package into a single trailing-slash prefix (e.g. `"pkg/"` instead of individual `"pkg/a"`, `"pkg/b"` entries).
-`false` keeps every used subpath explicit; `true` collapses within scopes; `"both"` also collapses top-level imports.
+Whether to collapse multiple subpath entries for the same package into a single trailing-slash prefix (e.g. `"pkg/"` instead of individual `"pkg/a"`, `"pkg/b"` entries):
+
+- `"split"` keeps every used subpath explicit
+- `"combined"` collapses within scopes
+- `"both"` also collapses top-level imports
+
 Combining subpaths can produce significantly smaller import maps, but is a lossy process, as it can expose specifiers that would not have resolved to anything in the original package.
 Corresponds to the [`combineSubpaths` option of `@jspm/generator`](https://jspm.org/docs/generator/interfaces/GeneratorOptions.html).
 
@@ -123,46 +152,60 @@ Corresponds to the [`combineSubpaths` option of `@jspm/generator`](https://jspm.
 
 ### `symlink`
 
-Config file only · Default: symlink [local dependencies](/local-deps/), copy the rest
+Config file only · Default: symlink [local dependencies](/local-deps/), copy the rest · Package-scoped
 
 Whether to symlink a package into `dir` instead of copying it.
 Symlinking means edits to a local dependency are visible immediately, with no re-copy.
-Can be a boolean, or a function receiving the package and returning one.
-[`dev` mode](/config/modes/) sets it to `true`, `prod` mode to `false`.
+[`dev` mode](/config/overrides/#modes) sets it to `true`, `prod` mode to `false`.
 
 > [!NOTE]
 > Netlify, Cloudflare Pages, Vercel and GitHub Pages do not support symlinks, so `symlink: true` is a local-development affordance, not a deploy strategy.
 
 ### `preserveSymlinks`
 
-Config file only · Default: `false`
+Config file only · Default: `false` · Package-scoped
 
 Whether to keep symlinks found *inside* a package as-is when copying it, rather than dereferencing them to real files.
-Can be a boolean, an array of package names, or a function receiving `{ packageName, version }`.
+Scope to specific packages via [override rules](/config/overrides/).
 
 ### `alias`
 
-`--alias` · Default: `true`
+`--alias` · Default: `true` · Package-scoped
 
-Create unversioned symlinks in `dir` pointing to versioned directories.
+Create unversioned symlinks pointing to versioned directories.
 Useful for stable URLs to package assets (CSS, images, etc.).
 See [Aliases](/config/aliases/).
 
-## Meta
+## Environment
+
+### `host`
+
+`--host` · Default: auto-detected
+
+Deploy host adapter: `netlify`, `vercel`, `cloudflare`, or `gitHubPages`.
+Normally detected from the environment; set it to force one.
 
 ### `mode`
 
 `--mode`, `-m`
 
-Activate a mode preset that sets multiple option defaults at once.
-Built-in modes: `dev`, `prod`.
-See [Modes](/config/modes/).
+The active mode.
+Built-in presets: `dev`, `prod`; define your own with rules that match on `mode`.
+See [Overrides & modes](/config/overrides/).
 
-### `modes`
+### `overrides`
 
 Config file only
 
-Define your own mode presets. See [Custom modes](/config/modes/#custom-modes).
+Conditional config rules: override options per package, per mode, per version — or unconditionally.
+See [Overrides & modes](/config/overrides/).
+
+### `hooks`
+
+Config file only
+
+Lifecycle hook callbacks: `constructed`, `create-aliases-start`, `create-aliases-after-external`, `create-aliases-end`.
+See [blissful-hooks](https://github.com/LeaVerou/blissful-hooks).
 
 ### `config`
 
