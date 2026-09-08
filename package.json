@@ -11,7 +11,7 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "npm run build:demos && docspire && npm run copy:demos",
-		"build:demos": "demos/each.sh 'npm install'",
+		"build:demos": "demos/each.sh 'npm install nudeps@latest && npx nudeps --root=../..'",
 		"copy:demos": "rsync -a --exclude node_modules demos/ _site/demos/",
 		"serve": "docspire --serve",
 		"watch": "docspire --watch",
