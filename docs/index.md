@@ -46,14 +46,54 @@ testimonials:
     avatar: https://avatars.githubusercontent.com/u/167908?v=4
 ---
 
-## Try it
+## Three steps, then forget it's there
+
+<ol class="steps">
+<li>
+
+### Install Nudeps once per project
 
 ```bash
 npx nudeps install
+```
+
+This adds a `dependencies` script to your `package.json`, so Nudeps re-runs itself every time you `npm install` or `npm uninstall`.
+No watcher to start, nothing to remember.
+
+</li>
+<li>
+
+### Add the import map to your HTML
+
+```html
+<script src="/importmap.js"></script>
+```
+
+One classic `<script>`, before any module scripts.
+Nudeps keeps the file up to date; the tag never changes.
+
+</li>
+<li>
+
+### Install dependencies like you always have
+
+```bash
 npm install vue
 ```
 
-That's it — `import { createApp } from "vue"` now works in the browser. See [Getting Started](/start/) for the whole story.
+Nudeps copies `vue` and everything it depends on to `client_modules/`, in versioned directories that cache like a CDN, and adds them to the import map.
+
+</li>
+</ol>
+
+That's it. Bare specifiers now work in the browser, served from your own domain:
+
+```js
+import { createApp } from "vue";
+```
+
+No bundler, no build step, no CDN.
+See it running in the [demos](/demos/), or read the [full walkthrough](/start/).
 
 ## Background
 
