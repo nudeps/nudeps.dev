@@ -1,0 +1,29 @@
+---
+layout: blank
+---
+{#
+	Overrides Docspire's landing layout (plugins/landing/templates/layouts/landing.njk) to add one thing:
+	an `outro` front matter block, rendered as Markdown *after* the testimonials.
+	The homepage uses it for the Background reading list, which reads better as a footnote to the
+	quotes than as a section wedged between the walkthrough and them.
+#}
+{% include "header.njk" %}
+
+<main>
+	{% include "hero.njk" %}
+	{% include "features.njk" %}
+
+	{% if content | trim %}
+	<div class="docs-content">
+		{{ content | safe }}
+	</div>
+	{% endif %}
+
+	{% include "testimonials.njk" %}
+
+	{% if outro %}
+	<div class="docs-content">
+		{% markdown %}{{ outro }}{% endmarkdown %}
+	</div>
+	{% endif %}
+</main>
