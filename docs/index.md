@@ -44,6 +44,12 @@ testimonials:
     quote: "Nudeps is how I want to build for the web. It helps make sure my time is spent adding features, rather than wrangling build steps."
     title: Web software engineer at OddBird
     avatar: https://avatars.githubusercontent.com/u/167908?v=4
+outro: |
+  ## Background
+
+  - [Web dependencies are broken. Can we fix them?](https://lea.verou.me/blog/2026/web-deps/)
+  - [External import maps, today!](https://lea.verou.me/blog/2026/external-import-maps-today/)
+  - [Introducing Nudeps: Web dependencies, naked!](https://lea.verou.me/blog/2026/nudeps/) (upcoming)
 ---
 
 ## Three steps, then forget it's there
@@ -94,9 +100,3 @@ import { createApp } from "vue";
 
 No bundler, no build step, no CDN.
 See it running in the [demos](/demos/), or read the [full walkthrough](/start/).
-
-## Background
-
-- [Web dependencies are broken. Can we fix them?](https://lea.verou.me/blog/2026/web-deps/)
-- [External import maps, today!](https://lea.verou.me/blog/2026/external-import-maps-today/)
-- [Introducing Nudeps: Web dependencies, naked!](https://lea.verou.me/blog/2026/nudeps/) (upcoming)
