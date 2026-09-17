@@ -57,10 +57,11 @@ All matching rules apply **in order, later wins**, merged per property — a lat
 The full priority order, weakest to strongest:
 
 1. Hard option defaults
-2. Built-in mode presets ([below](#modes))
-3. Top-level config file values
-4. Your rules, in order
-5. CLI / programmatic arguments
+2. [`defaults`](/api/#suggesting-defaults) from a programmatic caller
+3. Built-in mode presets ([below](#modes))
+4. Top-level config file values
+5. Your rules, in order
+6. CLI / programmatic arguments
 
 So an explicit top-level value beats a built-in preset, while your own rules — being more specific — beat top-level values.
 
@@ -71,8 +72,8 @@ One exception to per-property override: a rule's `ignore` **appends** to the glo
 ### What rules can set
 
 Rules that match packages may set the package-scoped options — `dir`, `symlink`, `preserveSymlinks`, `alias`, `ignore`, `imports`, `cjs` — plus `include`, which only exists inside rules.
-Mode-only and unconditional rules may set any option.
-Setting a global-only option (like `terse`) from a package-matched rule is an error.
+Mode-only and unconditional rules may set any other option.
+Setting a global-only option (like `terse`) from a package-matched rule is an error, and no rule of any kind may set `mode`, `config`, `init` or `overrides` — those decide what runs before rules exist.
 
 ### `include`
 

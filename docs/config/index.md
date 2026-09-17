@@ -12,7 +12,7 @@ export default {
 };
 ```
 
-**Priority** (weakest to strongest): hard defaults → built-in mode presets → config file values → matching [override rules](/config/overrides/) → CLI args.
+**Priority** (weakest to strongest): hard defaults → [`defaults`](/api/#suggesting-defaults) from a programmatic caller → built-in mode presets → config file values → matching [override rules](/config/overrides/) → CLI args.
 
 Unknown or invalid options fail loudly: typos get a "did you mean" suggestion, invalid values report which layer supplied them, and options from previous versions point at their replacement.
 
@@ -29,7 +29,7 @@ Top-level values are global; the [`overrides`](/config/overrides/) option scopes
 | [`terse`](#terse)                               | `false`                        | `--terse`                 |             | Minify the map script                                            |
 | [`prune`](#prune)                               | `false`                        | `--prune`                 |             | Keep only specifiers the entry points use                        |
 | [`include`](/config/overrides/#include)         | —                              |                           | ✅ (only)   | Direct-install membership: `"force"` \| `true` \| `false`        |
-| [`ignore`](#ignore)                             | Readmes, dotfiles, pkg files   |                           |     ✅      | File globs to skip when copying                                  |
+| [`ignore`](#ignore)                             | Dotfiles, lockfiles            |                           |     ✅      | File globs to skip when copying                                  |
 | [`imports`](#imports)                           | —                              |                           |     ✅      | Import map entries merged into the generated map                 |
 | [`cjs`](#cjs)                                   | `true`                         | `--cjs`                   |     ✅      | Shim CommonJS packages                                           |
 | [`subpaths`](#subpaths)                         | `"split"`                      | `--subpaths`              |             | Collapse subpath mappings: `"split"` \| `"combined"` \| `"both"` |

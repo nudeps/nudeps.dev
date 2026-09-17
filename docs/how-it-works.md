@@ -9,7 +9,7 @@ For example, `lit` may be mapped to `"./client_modules/lit@3.3.2/index.js"`.
 The injection script rebases each address to an absolute URL at runtime, against its own location rather than the page's — so a single import map resolves correctly from every page of a multi-page site, at any directory depth.
 
 It then optimistically adds your direct dependencies to your import map, so that you can use them straight away.
-In production (or if you use the [`prune`](/cli/#pruning) option), it will subset the import map to only include the dependencies you actually use.
+Use the [`prune`](/cli/#pruning) option (or [`prod` mode](/config/overrides/#modes), which turns it on) to subset the import map to only the dependencies you actually use.
 
 ## Do I need nudeps or JSPM?
 

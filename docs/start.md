@@ -10,7 +10,12 @@ To install Nudeps on a project and initialize it, run:
 npx nudeps install
 ```
 
-This will add a `dependencies` (or `predependencies`, `postdependencies` if `dependencies` is taken) script to your `package.json` that will run `nudeps` automatically whenever you install or uninstall packages.
+This will add Nudeps to your `devDependencies` (installing it if needed, and setting `type: "module"` while it is there), then add two scripts to your `package.json` that run `nudeps` automatically:
+
+- `dependencies`, which npm fires whenever you install or uninstall packages
+- `prepare`, which npm fires on a bare `npm install`, e.g. after cloning the repo
+
+If either name is already taken, Nudeps falls back to its `pre`/`post` variant (`predependencies`, `postdependencies`, and so on).
 It will also run Nudeps for you, which will copy your dependencies (and their transitive dependencies) to the client modules directory (as `./client_modules` by default) and generate an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) (as `importmap.js` by default).
 
 You can see an example of what such a file looks like in the [`floating-ui` demo](https://github.com/nudeps/nudeps-demos/blob/main/floating-ui/importmap.js) (you can also browse the [other demos](https://github.com/nudeps/nudeps-demos)).
@@ -84,7 +89,7 @@ You can keep installing and uninstalling dependencies as needed, and use them im
 
 Nudeps ships with a [`SKILL.md`](https://github.com/nudeps/nudeps/blob/main/SKILL.md) — a comprehensive reference that teaches AI coding agents how to work with nudeps correctly (lifecycle hooks, generated artifacts, CJS handling, common mistakes, etc.).
 
-The easiest way to install it is via the [`skills`](https://github.com/nicepkg/skills) CLI, which supports 45+ agents including Claude Code, Cursor, and Copilot:
+The easiest way to install it is via the [`skills`](https://github.com/vercel-labs/skills) CLI, which supports Claude Code, Cursor, Copilot and many more agents:
 
 ```bash
 npx skills add nudeps/nudeps
