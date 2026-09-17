@@ -13,6 +13,15 @@ npm runs this for you whenever dependencies change, so you only need it explicit
 
 Every [config option](/config/) that has a CLI equivalent can be passed as a flag, e.g. `npx nudeps --dir=vendor -m prod`.
 
+## `nudeps dependents`
+
+Tell every repo that depends on this one locally that it changed, so they regenerate their import maps, and register with this repo's own local dependencies so they can do the same for it.
+
+This is the whole of Nudeps' local-dependency bookkeeping without any import map generation, which is what lets a package take part in a chain of local dependencies without installing Nudeps.
+
+You do not run this by hand. When you `npm install ../other-repo`, Nudeps adds it to `other-repo`'s `dependencies` hook.
+See [Local Dependencies](/local-deps/).
+
 ## Pruning
 
 `npx nudeps --prune`
