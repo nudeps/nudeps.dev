@@ -2,6 +2,7 @@
 .netlify
 package-lock.json
 
+.docspire
 _site
 importmap.js
 node_modules
