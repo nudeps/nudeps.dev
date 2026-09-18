@@ -37,7 +37,7 @@ To maximize compatibility, this script needs to be included **before any module 
 
 If you want to include it as `<script type="module" src="importmap.js">` instead, set the [`module`](/config/) option to `true` in your nudeps config.
 
-Please note that as of March 2026, this will _dramatically_ reduce browser support and is not recommended.
+Please note that as of September 2026, this will _dramatically_ reduce browser support and is not recommended.
 :::
 
 Once you do that, you can just **forget about Nudeps and go about your business**, using `npm install` and `npm uninstall` for dependencies as you normally would.
