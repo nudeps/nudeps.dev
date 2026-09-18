@@ -15,6 +15,7 @@ export default {
 **Priority** (weakest to strongest): hard defaults → [`defaults`](/api/#suggesting-defaults) from a programmatic caller → built-in mode presets → config file values → matching [override rules](/config/overrides/) → CLI args.
 
 Unknown or invalid options fail loudly: typos get a "did you mean" suggestion, invalid values report which layer supplied them, and options from previous versions point at their replacement.
+Inside [override rules](/config/overrides/) only keys are checked, so an invalid *value* there passes silently.
 
 Top-level values are global; the [`overrides`](/config/overrides/) option scopes any package-scoped option (marked below) to specific packages, versions, or modes.
 
@@ -29,7 +30,7 @@ Top-level values are global; the [`overrides`](/config/overrides/) option scopes
 | [`terse`](#terse)                               | `false`                        | `--terse`                 |             | Minify the map script                                            |
 | [`prune`](#prune)                               | `false`                        | `--prune`                 |             | Keep only specifiers the entry points use                        |
 | [`include`](/config/overrides/#include)         | —                              |                           | ✅ (only)   | Direct-install membership: `"force"` \| `true` \| `false`        |
-| [`ignore`](#ignore)                             | Dotfiles, lockfiles            |                           |     ✅      | File globs to skip when copying                                  |
+| [`ignore`](#ignore)                             | Dotfiles, lockfiles            | `--ignore`                |     ✅      | File globs to skip when copying                                  |
 | [`imports`](#imports)                           | —                              |                           |     ✅      | Import map entries merged into the generated map                 |
 | [`cjs`](#cjs)                                   | `true`                         | `--cjs`                   |     ✅      | Shim CommonJS packages                                           |
 | [`subpaths`](#subpaths)                         | `"split"`                      | `--subpaths`              |             | Collapse subpath mappings: `"split"` \| `"combined"` \| `"both"` |
@@ -116,10 +117,14 @@ Note that `include: false` does not guarantee absence from the map: a package ac
 
 ### `ignore`
 
-Config file only · Package-scoped
+`--ignore` · Package-scoped
 
 Any files to exclude from being copied to the target directory.
 See [Deployed files](/config/files/).
+
+On the command line each `--ignore` takes a single glob, and the flag may be repeated to add more.
+Commas do not separate globs: `--ignore="dist/**,docs/**"` is one glob that matches nothing.
+The `{ copy }` and `{ ignore }` object forms are config file only.
 
 ## Resolution
 
