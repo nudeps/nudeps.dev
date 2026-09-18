@@ -10,7 +10,7 @@ For example, `client_modules/open-props` will point to `client_modules/open-prop
 
 This lets you use stable paths like `client_modules/open-props/open-props.min.css` in your HTML and CSS.
 
-By default, `alias` is `true`, which creates an unversioned symlink for every direct dependency using its install name (generally the same as the package name, except for [npm aliases](https://docs.npmjs.com/cli/v11/using-npm/package-spec#aliases)).
+By default, `alias` is `true`, which creates an unversioned symlink for every copied package using its install name (generally the same as the package name, except for [npm aliases](https://docs.npmjs.com/cli/v11/using-npm/package-spec#aliases)).
 Set `alias: false` to opt out entirely.
 
 ::: note
@@ -19,7 +19,7 @@ Hosts without symlink support (Netlify, Cloudflare Pages) get redirect rules ins
 
 ## Values
 
-- `true` — alias the package at its install name. Globally, this covers direct dependencies only (transitive duplicates at other versions are skipped).
+- `true` — alias the package at its install name. Only the copy whose version sits closest to the root is aliased, so duplicates at other versions are skipped.
 - `false` — no alias.
 - A string — a custom alias **path, relative to the package's [`dir`](/config/#dir)**. It may escape `dir`: `"../open-props"` places the alias at the project root, so `<link href="open-props/open-props.min.css">` works from your HTML.
 
@@ -35,11 +35,11 @@ export default {
 };
 ```
 
-Rules also reach transitive dependencies (which `alias: true` alone does not):
+Rules take a regex matcher, so you can scope aliases to a whole namespace:
 
 ```js
 export default {
-	overrides: [{ name: /./, alias: true }], // alias everything, even transitive deps
+	overrides: [{ name: /^@vue\//, alias: false }], // no aliases for @vue/* internals
 };
 ```
 
