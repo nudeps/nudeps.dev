@@ -45,7 +45,7 @@ If something seems off, you can run `npx nudeps` explicitly, but most of the tim
 
 ## Walkthrough: a Vue app
 
-Suppose you want to use e.g. [VueJS](https://vuejs.org/) for a simple web app.
+Suppose you want to use e.g. [Vue](https://vuejs.org/) for a simple web app.
 
 You could start by creating a new directory for your app with the following files:
 
@@ -79,7 +79,7 @@ Install Nudeps and add the necessary npm hooks to your `package.json` by running
 npx nudeps install
 ```
 
-Then you can install dependencies and they would Just Work™, starting with VueJS:
+Then you can install dependencies and they would Just Work™, starting with Vue:
 
 ```bash
 npm install vue
