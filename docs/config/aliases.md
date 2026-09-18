@@ -13,8 +13,9 @@ This lets you use stable paths like `client_modules/open-props/open-props.min.cs
 By default, `alias` is `true`, which creates an unversioned symlink for every direct dependency using its install name (generally the same as the package name, except for [npm aliases](https://docs.npmjs.com/cli/v11/using-npm/package-spec#aliases)).
 Set `alias: false` to opt out entirely.
 
-> [!NOTE]
-> Hosts without symlink support (Netlify, Cloudflare Pages) get redirect rules instead, written to `_redirects` in your [`root`](/config/#root).
+::: note
+Hosts without symlink support (Netlify, Cloudflare Pages) get redirect rules instead, written to `_redirects` in your [`root`](/config/#root).
+:::
 
 ## Values
 
@@ -44,4 +45,6 @@ export default {
 
 When an alias is removed from the config (or its package is uninstalled), the symlink is automatically cleaned up on the next run — including aliases outside `dir`.
 
-> **npm aliases:** When using npm aliases (e.g. `npm install my-props@npm:open-props`), dictionary keys match against both the install name (`my-props`) and the real package name (`open-props`); in the rule form, match `name` or `installName` explicitly to distinguish multiple installs of the same package (optionally filtered by `version`).
+::: note npm aliases
+When using npm aliases (e.g. `npm install my-props@npm:open-props`), dictionary keys match against both the install name (`my-props`) and the real package name (`open-props`); in the rule form, match `name` or `installName` explicitly to distinguish multiple installs of the same package (optionally filtered by `version`).
+:::

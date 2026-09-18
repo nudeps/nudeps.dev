@@ -20,8 +20,9 @@ It will also run Nudeps for you, which will copy your dependencies (and their tr
 
 You can see an example of what such a file looks like in the [`floating-ui` demo](https://github.com/nudeps/nudeps-demos/blob/main/floating-ui/importmap.js) (you can also browse the [other demos](https://github.com/nudeps/nudeps-demos)).
 
-> [!NOTE]
-> Normally you should avoid committing your import map to version control as it's a build artifact, but it is included there for demonstration purposes.
+::: note
+Normally you should avoid committing your import map to version control as it's a build artifact, but it is included there for demonstration purposes.
+:::
 
 ## Including the import map
 
@@ -31,10 +32,13 @@ To use the import map in your app, include it in a classic (non-module) `<script
 <script src="/importmap.js"></script>
 ```
 
-> [!IMPORTANT]
-> To maximize compatibility, this script needs to be included **before any module scripts are loaded, and must be included as a regular script, not a module script.**
-> If you want to include it as `<script type="module" src="importmap.js">` instead, set the [`module`](/config/) option to `true` in your nudeps config.
-> Please note that as of March 2026, this will _dramatically_ reduce browser support and is not recommended.
+::: important
+To maximize compatibility, this script needs to be included **before any module scripts are loaded, and must be included as a regular script, not a module script.**
+
+If you want to include it as `<script type="module" src="importmap.js">` instead, set the [`module`](/config/) option to `true` in your nudeps config.
+
+Please note that as of March 2026, this will _dramatically_ reduce browser support and is not recommended.
+:::
 
 Once you do that, you can just **forget about Nudeps and go about your business**, using `npm install` and `npm uninstall` for dependencies as you normally would.
 If something seems off, you can run `npx nudeps` explicitly, but most of the time things should Just Work™.

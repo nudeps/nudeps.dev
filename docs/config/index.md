@@ -185,8 +185,9 @@ Whether to symlink a package into `dir` instead of copying it.
 Symlinking means edits to a local dependency are visible immediately, with no re-copy.
 [`dev` mode](/config/overrides/#modes) sets it to `true`, `prod` mode to `false`.
 
-> [!NOTE]
-> Netlify, Cloudflare Pages, Vercel and GitHub Pages do not support symlinks, so `symlink: true` is a local-development affordance, not a deploy strategy.
+::: note
+Netlify, Cloudflare Pages, Vercel and GitHub Pages do not support symlinks, so `symlink: true` is a local-development affordance, not a deploy strategy.
+:::
 
 ### `preserveSymlinks`
 

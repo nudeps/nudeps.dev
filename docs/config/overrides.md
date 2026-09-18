@@ -88,8 +88,9 @@ Membership in the direct-install set — one setting replacing separate add/forc
 
 `true` and `"force"` require exact-name matchers (you cannot install a regex); `false` accepts any matcher, so `{ installName: /^@types\//, include: false }` works.
 
-> [!NOTE]
-> `include: false` does not guarantee absence from the map: a package your code actively imports still gets mapped.
+::: note
+`include: false` does not guarantee absence from the map: a package your code actively imports still gets mapped.
+:::
 
 ## Modes
 
