@@ -7,7 +7,38 @@ import nudeps from "nudeps";
 await nudeps({ prune: true });
 ```
 
-It accepts the same options as the [config file](/config/).
+It accepts the same options as the [config file](/config/), and they win over both the config file and any [override rules](/config/overrides/).
+
+## What you get back
+
+`nudeps()` resolves to the `Nudeps` instance, whose `config` holds every resolved option — read it instead of guessing where files ended up:
+
+```js
+let { config } = await nudeps();
+// config.dir  → "client_modules"
+// config.map  → "importmap.js"
+```
+
+It resolves to `null` instead when the run was skipped, which happens for a [workspace](/local-deps/) child whose lockfile npm has yet to write or is about to rewrite — the run that reads it comes later. Check for it before destructuring:
+
+```js
+let result = await nudeps();
+if (result) {
+	console.log(result.config.map);
+}
+```
+
+## Suggesting defaults
+
+Pass `defaults` to supply values for anything the user's config file and rules leave unset, without overriding what they did set.
+This is what a tool should reach for when it has good suggestions but no right to insist — e.g. a static site generator that wants its output paths used unless the project says otherwise:
+
+```js
+import nudeps from "nudeps";
+await nudeps({ defaults: { dir: "dist/client_modules", root: "dist" } });
+```
+
+`defaults` is the weakest layer of the [cascade](/config/overrides/#the-cascade), below even the built-in mode presets, and is programmatic-only: there is no config file key or CLI flag for it.
 
 ## Injecting your own client-side libraries
 

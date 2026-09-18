@@ -63,7 +63,7 @@ outro: |
 npx nudeps install
 ```
 
-This adds a `dependencies` script to your `package.json`, so Nudeps re-runs itself every time you `npm install` or `npm uninstall`.
+This adds Nudeps to your `devDependencies` and gives your `package.json` two scripts: `dependencies`, so Nudeps re-runs itself every time you `npm install` or `npm uninstall`, and `prepare`, so a fresh clone is ready too.
 No watcher to start, nothing to remember.
 
 </li>

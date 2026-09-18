@@ -2,7 +2,7 @@
 
 ## `nudeps install`
 
-Install Nudeps into a project: adds the npm lifecycle script that keeps your import map up to date, then runs Nudeps once to initialize.
+Install Nudeps into a project: adds it to your `devDependencies`, adds the `dependencies` and `prepare` npm lifecycle scripts that keep your import map up to date, then runs Nudeps once to initialize.
 This is the only command most projects ever need to run by hand.
 See [Getting Started](/start/).
 
