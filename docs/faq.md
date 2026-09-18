@@ -12,6 +12,24 @@ When the import map injection script is included as a non-module script before a
 - Safari **16.4+**
 - Firefox **108+**
 
+## Should client-side dependencies go in `dependencies` or `devDependencies`?
+
+`dependencies`.
+Nudeps adds your production dependencies to the import map as soon as they are installed.
+A package in `devDependencies` is skipped, and nothing warns you — the specifier just fails to resolve in the browser.
+
+```bash
+npm install vue      # ✅ ends up in the import map
+npm install -D vue   # ❌ does not
+```
+
+Bundler workflows blur this distinction, since the bundler inlines everything it is pointed at and the field it came from never matters.
+Nudeps serves your dependencies to the browser at runtime, which is exactly what npm means by `dependencies`.
+
+Nudeps itself is the exception: `npx nudeps install` puts it in `devDependencies`, because it generates the import map rather than being imported by it.
+
+To map a package that you deliberately keep in `devDependencies` — or one that is not in your `package.json` at all — add it with [`include: true`](/config/overrides/#include).
+
 ## Does this support pnpm/bun/yarn/etc.?
 
 At the moment, we're focusing on nailing the best DX possible, and to let us focus on that, we're cutting scope by only supporting npm for now.

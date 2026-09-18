@@ -33,10 +33,11 @@ To use the import map in your app, include it in a classic (non-module) `<script
 
 > [!IMPORTANT]
 > To maximize compatibility, this script needs to be included **before any module scripts are loaded, and must be included as a regular script, not a module script.**
-> If you want to include it as `<script type="module" src="importmap.js">` instead, set the [`module`](/config/) option to `true` in your nudeps config.
-> Please note that as of March 2026, this will _dramatically_ reduce browser support and is not recommended.
+> If you want to include it as `<script type="module" src="importmap.js">` instead, set the [`module`](/config/#module) option to `true` in your nudeps config.
+> Please note that this _dramatically_ reduces browser support and is not recommended: a module script injects the map after modules have started loading, which needs [multiple import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) — shipped in Chrome 133+ and Safari 18.4+, but still behind a flag in Firefox 150 and absent from Firefox for Android.
 
 Once you do that, you can just **forget about Nudeps and go about your business**, using `npm install` and `npm uninstall` for dependencies as you normally would.
+One rule to keep in mind: anything the browser imports belongs in `dependencies`, not `devDependencies` — see [the FAQ](/faq/#should-client-side-dependencies-go-in-dependencies-or-devdependencies).
 If something seems off, you can run `npx nudeps` explicitly, but most of the time things should Just Work™.
 
 ## Walkthrough: a Vue app

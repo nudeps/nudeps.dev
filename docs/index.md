@@ -88,6 +88,7 @@ npm install vue
 ```
 
 Nudeps copies `vue` and everything it depends on to `client_modules/`, in versioned directories that cache like a CDN, and adds them to the import map.
+Plain `npm install`, not `-D`: what the browser imports is a real dependency.
 
 </li>
 </ol>

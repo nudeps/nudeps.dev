@@ -82,7 +82,7 @@ Membership in the direct-install set — one setting replacing separate add/forc
 | Value       | Meaning                                                                                    |
 | ----------- | ------------------------------------------------------------------------------------------ |
 | `undefined` | Standard behavior: in `dependencies` → installed (prunable); otherwise only if imported    |
-| `true`      | Install like a dependency even if not listed in `dependencies`; subject to `prune`         |
+| `true`      | Install like a dependency even if not listed in `dependencies` (e.g. a `devDependency` the browser imports); subject to `prune` |
 | `"force"`   | Install **and** survive `prune`                                                            |
 | `false`     | Remove from the direct-install set                                                         |
 
