@@ -1,3 +1,8 @@
+---
+# Redundant with the h1, but docspire escapes the h1-derived title twice (docspired/docspire#69)
+title: Overrides & Modes
+---
+
 # Overrides & Modes
 
 **One mechanism for conditional configuration: per package, per mode, per version — or all at once.**
