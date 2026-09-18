@@ -21,8 +21,12 @@ Nudeps still registers you as a dependent of the sibling, but leaves its `packag
 
 ## Propagation
 
-When nudeps detects that the generated import map has actually changed (content differs from the file on disk), it reads `.nudeps/local-dependents.json` and runs `npm run dependencies --if-present` in each listed dependent.
+Each time nudeps runs, it reads `.nudeps/local-dependents.json` and runs `npm run dependencies --if-present` in each listed dependent.
 This ensures that when package B's dependencies change, any repo A that depends on B locally gets its import map updated automatically.
+
+A run you started yourself stops there if the generated import map is byte-identical to the one on disk: nothing changed, so there is nothing to pass on.
+A **relayed** run — one reached through another repo's `dependencies` hook — passes the change on regardless.
+Its own map proves nothing about its dependents': in a chain `app` → `lib` → `util`, a change in `util` usually leaves `lib`'s map byte-identical, and stopping there would strand `app`.
 
 Circular local dependencies (A depends on B and B depends on A) terminate: each hop carries the route it has taken, and a repo that has already propagated in the current cascade stops instead of passing the change on again.
 The route travels in an environment variable, `NUDEPS_PROPAGATED`, so you will see it in the environment of any script npm runs during a cascade.
@@ -32,4 +36,4 @@ Nothing outside nudeps needs to read or set it.
 
 Local dependencies can be nested: your app depends on `../lib`, which itself depends on `../util`.
 Because `npx nudeps dependents` registers as a dependent of its own local dependencies before notifying its dependents, each link sets up the next one — a change in `util` reaches `lib`, and `lib` passes it on to your app.
-None of the intermediate packages need Nudeps installed.
+None of the intermediate packages need Nudeps installed — and one that does have it relays the change on anyway, even though its own import map does not change.
