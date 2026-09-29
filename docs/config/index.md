@@ -237,7 +237,7 @@ See [Overrides & modes](/config/overrides/).
 
 Config file only
 
-Lifecycle hook callbacks: `constructed`, `create-aliases-start`, `create-aliases-after-external`, `create-aliases-end`.
+Lifecycle hook callbacks: `prepare-start`, `create-aliases-start`, `create-aliases-after-external`, `create-aliases-end`.
 See [blissful-hooks](https://github.com/LeaVerou/blissful-hooks).
 
 ### `config`

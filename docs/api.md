@@ -40,6 +40,28 @@ await nudeps({ defaults: { dir: "dist/client_modules", root: "dist" } });
 
 `defaults` is the weakest layer of the [cascade](/config/overrides/#the-cascade), below even the built-in mode presets, and is programmatic-only: there is no config file key or CLI flag for it.
 
+## Preparing now, writing later
+
+`nudeps()` does everything in one go. A tool that needs to act between preparing and writing can use the `Nudeps` class instead — e.g. a static site generator whose own build fills the output directory and would overwrite files nudeps put there:
+
+```js
+import { Nudeps } from "nudeps";
+
+let nudeps = new Nudeps({ defaults: { dir: "dist/client_modules", root: "dist" } });
+await nudeps.prepare();
+// nudeps.config.dir is known here
+await build(); // may clear or fill dist/
+await nudeps.write();
+```
+
+- `new Nudeps(options)` takes the same options as `nudeps()` and does no work yet.
+- `prepare()` resolves the config and the import map. It writes nothing outside nudeps' own `.nudeps/` cache.
+- `write()` copies dependencies, writes the import map and any host files (e.g. Netlify's `_redirects`), and notifies [local dependents](/local-deps/). It runs `prepare()` itself if you haven't.
+
+Each `Nudeps` prepares and writes once: calling `prepare()` or `write()` again returns the first call's result, even a failed one. For a build that repeats, e.g. in watch mode, create a new `Nudeps` for each build. It traces your dependencies again, so it picks up changes, and nudeps' cache keeps that fast.
+
+Unlike `nudeps()`, the class never skips a run, not even while npm is still installing a [workspace](/local-deps/). Use it in your build scripts, not npm hooks.
+
 ## Injecting your own client-side libraries
 
 A tool that generates sites (e.g. a static site generator) can pass [override rules](/config/overrides/) with [`include`](/config/overrides/#include) to inject its own client-side libraries into the consumer's import map, even though they are only `devDependencies` of the tool and not declared in the consumer's `dependencies`:
