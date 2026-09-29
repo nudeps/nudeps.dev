@@ -237,7 +237,7 @@ export default {
 
 `--host` · Default: auto-detected
 
-Deploy host adapter: `netlify`, `vercel`, `cloudflare`, or `gitHubPages`.
+Deploy host adapter: `netlify`, `vercel`, `amplify`, `cloudflare`, or `gitHubPages`.
 Normally detected from the environment; set it to force one.
 
 ### `mode`
