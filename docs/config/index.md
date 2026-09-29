@@ -238,7 +238,14 @@ export default {
 `--host` · Default: auto-detected
 
 Deploy host adapter: `netlify`, `vercel`, `amplify`, `cloudflare`, or `gitHubPages`.
-Normally detected from the environment; set it to force one.
+Set it to force one.
+
+::: note
+Vercel runs `npm install`, and so Nudeps, only with a build step.
+So for Vercel projects, `nudeps install` adds `"build": "nudeps"` when there is no `build` script.
+It detects Vercel from `vercel.json` or `.vercel/project.json` (created by `vercel link`).
+Otherwise, run `npx nudeps install --host vercel`.
+:::
 
 ### `mode`
 
