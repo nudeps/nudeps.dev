@@ -60,7 +60,28 @@ await nudeps.write();
 
 Each `Nudeps` prepares and writes once: calling `prepare()` or `write()` again returns the first call's result, even a failed one. For a build that repeats, e.g. in watch mode, create a new `Nudeps` for each build. It traces your dependencies again, so it picks up changes, and nudeps' cache keeps that fast.
 
-Unlike `nudeps()`, the class never skips a run, not even while npm is still installing a [workspace](/local-deps/). Use it in your build scripts, not npm hooks.
+Unlike `nudeps()`, the class never skips a run, not even while npm is still installing a [workspace](/local-deps/). Use it in your build scripts, not npm hooks, or skip such a run yourself:
+
+```js
+if (!nudeps.isDeferred()) {
+	await nudeps.write();
+}
+```
+
+`isDeferred()` returns `true` when npm will run nudeps again once it has written the lockfile, and it logs why.
+
+## Redirecting output
+
+Every message nudeps prints goes through three methods of the `Nudeps` instance: `info()`, `warn()` and `error()`. By default, they print to the console with a `[nudeps]` prefix. Override them on the instance or in a subclass to redirect or silence the output:
+
+```js
+let nudeps = new Nudeps();
+nudeps.info = () => {}; // keep warnings and errors only
+nudeps.warn = (...messages) => report.push(messages.join(" "));
+await nudeps.write();
+```
+
+`nudeps()` creates its instance internally, so use the class when you need this.
 
 ## Injecting your own client-side libraries
 
