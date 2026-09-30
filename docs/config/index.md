@@ -245,6 +245,7 @@ Vercel runs `npm install`, and so Nudeps, only with a build step.
 So for Vercel projects, `nudeps install` adds `"build": "nudeps"` when there is no `build` script.
 It detects Vercel from `vercel.json` or `.vercel/project.json` (created by `vercel link`).
 Otherwise, run `npx nudeps install --host vercel`.
+Other runs never edit your `package.json`: they warn when the `build` script is missing and point you to `npx nudeps install`.
 :::
 
 ### `mode`
