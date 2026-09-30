@@ -19,7 +19,8 @@ Tell every repo that depends on this one locally that it changed, so they regene
 
 This is the whole of Nudeps' local-dependency bookkeeping without any import map generation, which is what lets a package take part in a chain of local dependencies without installing Nudeps.
 
-You do not run this by hand. When you `npm install ../other-repo`, Nudeps adds it to `other-repo`'s `dependencies` hook.
+You do not run this by hand. It runs from `other-repo`'s `dependencies` hook, which Nudeps adds when you set [`wireLocalDeps`](/config/#wirelocaldeps).
+With `--wireLocalDeps`, it also gives this repo's own local dependencies the same hook.
 See [Local Dependencies](/local-deps/).
 
 ## Pruning
