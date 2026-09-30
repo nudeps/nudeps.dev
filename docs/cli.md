@@ -3,6 +3,7 @@
 ## `nudeps install`
 
 Install Nudeps into a project: adds it to your `devDependencies`, adds the `dependencies` and `prepare` npm lifecycle scripts that keep your import map up to date, then runs Nudeps once to initialize.
+On Vercel, it also adds a `build` script if you have none, [so Vercel runs Nudeps](/config/#host).
 This is the only command most projects ever need to run by hand.
 See [Getting Started](/start/).
 

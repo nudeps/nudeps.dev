@@ -191,7 +191,8 @@ Symlinking means edits to a local dependency are visible immediately, with no re
 [`dev` mode](/config/overrides/#modes) sets it to `true`, `prod` mode to `false`.
 
 ::: note
-Netlify, Cloudflare Pages, Vercel and GitHub Pages do not support symlinks, so `symlink: true` is a local-development affordance, not a deploy strategy.
+Netlify, Cloudflare Pages and GitHub Pages do not serve symlinks, so there `symlink: true` is a local-development affordance, not a deploy strategy.
+Vercel serves only symlinks that point inside the output directory, and AWS Amplify serves them wherever they point.
 :::
 
 ### `preserveSymlinks`
@@ -215,8 +216,16 @@ See [Aliases](/config/aliases/).
 
 `--host` · Default: auto-detected
 
-Deploy host adapter: `netlify`, `vercel`, `cloudflare`, or `gitHubPages`.
-Normally detected from the environment; set it to force one.
+Deploy host adapter: `netlify`, `vercel`, `amplify`, `cloudflare`, or `gitHubPages`.
+Set it to force one.
+
+::: note
+Vercel runs `npm install`, and so Nudeps, only with a build step.
+So for Vercel projects, `nudeps install` adds `"build": "nudeps"` when there is no `build` script.
+It detects Vercel from `vercel.json` or `.vercel/project.json` (created by `vercel link`).
+Otherwise, run `npx nudeps install --host vercel`.
+Other runs never edit your `package.json`: they warn when the `build` script is missing and point you to `npx nudeps install`.
+:::
 
 ### `mode`
 
