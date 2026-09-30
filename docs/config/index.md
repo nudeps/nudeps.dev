@@ -37,6 +37,7 @@ Top-level values are global; the [`overrides`](/config/overrides/) option scopes
 | [`symlink`](#symlink)                           | External deps only             | `--symlink`               |     ✅      | Symlink packages instead of copying                              |
 | [`preserveSymlinks`](#preservesymlinks)         | `false`                        | `--preserveSymlinks`      |     ✅      | Keep symlinks inside copied packages                             |
 | [`alias`](#alias)                               | `true`                         | `--alias`                 |     ✅      | Unversioned stable paths to packages                             |
+| [`wireLocalDeps`](#wirelocaldeps)               | `false`                        | `--wireLocalDeps`         |             | Add the notify hook to local deps' `package.json`                |
 | [`overrides`](/config/overrides/)               | —                              |                           |             | Conditional rules: per package, mode, version                    |
 | [`host`](#host)                                 | Auto-detected                  | `--host`                  |             | Deploy host adapter                                              |
 | [`mode`](#mode)                                 | —                              | `--mode`, `-m`            |             | Active mode, tested by rules                                     |
@@ -208,6 +209,14 @@ Scope to specific packages via [override rules](/config/overrides/).
 Create unversioned symlinks pointing to versioned directories.
 Useful for stable URLs to package assets (CSS, images, etc.).
 See [Aliases](/config/aliases/).
+
+### `wireLocalDeps`
+
+`--wireLocalDeps` · Default: `false`
+
+Let Nudeps add `"dependencies": "npx nudeps dependents --wireLocalDeps"` to the `package.json` of each [local dependency](/local-deps/), so it notifies you when its own dependencies change.
+The flag in that hook lets each local dependency wire its own local dependencies in turn.
+Without this option, Nudeps never edits another repo's `package.json`: it warns instead, and you can add the hook yourself.
 
 ## Environment
 
