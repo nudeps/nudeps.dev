@@ -192,7 +192,8 @@ Symlinking means edits to a local dependency are visible immediately, with no re
 [`dev` mode](/config/overrides/#modes) sets it to `true`, `prod` mode to `false`.
 
 ::: note
-Netlify, Cloudflare Pages, Vercel and GitHub Pages do not support symlinks, so `symlink: true` is a local-development affordance, not a deploy strategy.
+Netlify, Cloudflare Pages and GitHub Pages do not serve symlinks, so there `symlink: true` is a local-development affordance, not a deploy strategy.
+Vercel serves only symlinks that point inside the output directory, and AWS Amplify serves them wherever they point.
 :::
 
 ### `preserveSymlinks`
