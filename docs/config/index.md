@@ -37,7 +37,7 @@ Top-level values are global; the [`overrides`](/config/overrides/) option scopes
 | [`symlink`](#symlink)                           | External deps only             | `--symlink`               |     ✅      | Symlink packages instead of copying                              |
 | [`preserveSymlinks`](#preservesymlinks)         | `false`                        | `--preserveSymlinks`      |     ✅      | Keep symlinks inside copied packages                             |
 | [`alias`](#alias)                               | `true`                         | `--alias`                 |     ✅      | Unversioned stable paths to packages                             |
-| [`wireLocalDeps`](#wirelocaldeps)               | `false`                        | `--wireLocalDeps`         |             | Add the notify hook to local deps' `package.json`                |
+| [`wireLocalDeps`](#wirelocaldeps)               | —                              |                           |     ✅      | Add the notify hook to local deps' `package.json`                |
 | [`overrides`](/config/overrides/)               | —                              |                           |             | Conditional rules: per package, mode, version                    |
 | [`host`](#host)                                 | Auto-detected                  | `--host`                  |             | Deploy host adapter                                              |
 | [`mode`](#mode)                                 | —                              | `--mode`, `-m`            |             | Active mode, tested by rules                                     |
@@ -212,11 +212,24 @@ See [Aliases](/config/aliases/).
 
 ### `wireLocalDeps`
 
-`--wireLocalDeps` · Default: `false`
+Config file only · Package-scoped
 
-Let Nudeps add `"dependencies": "npx nudeps dependents --wireLocalDeps"` to the `package.json` of each [local dependency](/local-deps/), so it notifies you when its own dependencies change.
-The flag in that hook lets each local dependency wire its own local dependencies in turn.
-Without this option, Nudeps never edits another repo's `package.json`: it warns instead, and you can add the hook yourself.
+Let Nudeps add `"dependencies": "npx nudeps dependents"` to the `package.json` of every [local dependency](/local-deps/) in the chain, so each one notifies its dependents when its own dependencies change.
+
+- Unset: Nudeps never edits another repo's `package.json`. It warns instead, and you can add the hook yourself.
+- `false`: the same, without the warning.
+- `true`: your run adds the hook to your local dependencies and to theirs.
+
+A package rule decides for that package and for the local dependencies it pulls in:
+
+```js
+export default {
+	wireLocalDeps: true,
+	overrides: {
+		"other-repo": { wireLocalDeps: false },
+	},
+};
+```
 
 ## Environment
 
