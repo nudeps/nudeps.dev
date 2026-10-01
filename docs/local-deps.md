@@ -10,11 +10,11 @@ When you have local dependencies (installed via `npm install ../other-repo`), nu
 
 ## Registration
 
-Each time nudeps runs, it registers itself as a dependent of each of its local dependencies by writing its relative path to the dep's `.nudeps/local-dependents.json`.
+Each time nudeps runs, it registers each of its local dependencies, nested ones included, with the package that links it: it writes that package's relative path to the dep's `.nudeps/local-dependents.json`.
 
-With [`wireLocalDeps: true`](/config/#wirelocaldeps), it also makes sure the dependency can notify you back: if none of its `dependencies`, `predependencies` or `postdependencies` scripts mention nudeps, `"dependencies": "npx nudeps dependents --wireLocalDeps"` is added to its `package.json`, preserving that file's existing formatting.
-The flag lets that dependency wire its own local dependencies in turn.
+With [`wireLocalDeps: true`](/config/#wirelocaldeps), it also makes sure each of them can notify back: if none of its `dependencies`, `predependencies` or `postdependencies` scripts mention nudeps, `"dependencies": "npx nudeps dependents"` is added to its `package.json`, preserving that file's existing formatting.
 Without the option, Nudeps never edits another repo's `package.json`: it warns instead, and you can add the hook yourself.
+Set it to `false` to drop the warning.
 A dependency that already runs the full `npx nudeps` is left alone — it notifies its dependents anyway, and a second command would notify them twice.
 
 **Workspace siblings are the exception.**
@@ -37,5 +37,6 @@ Nothing outside nudeps needs to read or set it.
 ## Chains
 
 Local dependencies can be nested: your app depends on `../lib`, which itself depends on `../util`.
-Because `npx nudeps dependents` registers as a dependent of its own local dependencies before notifying its dependents (and, with `--wireLocalDeps`, gives them the hook), each link sets up the next one — a change in `util` reaches `lib`, and `lib` passes it on to your app.
+Your app's run registers `util` with `lib` and, with `wireLocalDeps: true`, gives both their hook.
+`npx nudeps dependents` also registers as a dependent of its own local dependencies before notifying its dependents, so a link added later is picked up too — a change in `util` reaches `lib`, and `lib` passes it on to your app.
 None of the intermediate packages need Nudeps installed — and one that does have it relays the change on anyway, even though its own import map does not change.
