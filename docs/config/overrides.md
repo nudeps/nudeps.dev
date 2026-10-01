@@ -76,7 +76,7 @@ One exception to per-property override: a rule's `ignore` **appends** to the glo
 
 ### What rules can set
 
-Rules that match packages may set the package-scoped options — `dir`, `symlink`, `preserveSymlinks`, `alias`, `ignore`, `imports`, `cjs` — plus `include`, which only exists inside rules.
+Rules that match packages may set the package-scoped options — `dir`, `symlink`, `preserveSymlinks`, `alias`, `ignore`, `imports`, `cjs`, `wireLocalDeps` — plus `include`, which only exists inside rules.
 Mode-only and unconditional rules may set any other option.
 Setting a global-only option (like `terse`) from a package-matched rule is an error, and no rule of any kind may set `mode`, `config`, `init` or `overrides` — those decide what runs before rules exist.
 
