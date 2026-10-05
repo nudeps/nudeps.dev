@@ -11,10 +11,12 @@ When you have local dependencies (installed via `npm install ../other-repo`), nu
 ## Registration
 
 Each time nudeps runs, it registers each of its local dependencies, nested ones included, with the package that links it: it writes that package's relative path to the dep's `.nudeps/local-dependents.json`.
+A local dependency in `devDependencies` is skipped, along with everything it links: Nudeps never installs it, so it has nothing to propagate.
 
 With [`wireLocalDeps: true`](/config/#wirelocaldeps), it also makes sure each of them can notify back: if none of its `dependencies`, `predependencies` or `postdependencies` scripts mention nudeps, `"dependencies": "npx nudeps dependents"` is added to its `package.json`, preserving that file's existing formatting.
 Without the option, Nudeps never edits another repo's `package.json`: it warns instead, and you can add the hook yourself.
 Set it to `false` to drop the warning.
+A [package rule](/config/overrides/) can set it for one dependency, and the setting then covers that dependency's own local dependencies too.
 A dependency that already runs the full `npx nudeps` is left alone — it notifies its dependents anyway, and a second command would notify them twice.
 
 **Workspace siblings are the exception.**
