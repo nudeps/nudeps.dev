@@ -18,10 +18,12 @@ Every [config option](/config/) that has a CLI equivalent can be passed as a fla
 
 Tell every repo that depends on this one locally that it changed, so they regenerate their import maps, and register with this repo's own local dependencies so they can do the same for it.
 
-This is the whole of Nudeps' local-dependency bookkeeping without any import map generation, which is what lets a package take part in a chain of local dependencies without installing Nudeps.
+npm does not run your `dependencies` hook when the dependencies of `other-repo` change (npm bug [#8984](https://github.com/npm/cli/issues/8984)), so `other-repo` has to notify you itself.
+This command does that without generating an import map, so `other-repo` needs no Nudeps installed.
 
-You do not run this by hand. It runs from `other-repo`'s `dependencies` hook, which Nudeps adds when you set [`wireLocalDeps`](/config/#wirelocaldeps).
-`nudeps dependents` never edits a `package.json`: your app's run gives every link in the chain its hook.
+Run it from `other-repo`'s `dependencies` hook: `"dependencies": "npx nudeps dependents"`.
+With [`wireLocalDeps: true`](/config/#wirelocaldeps), your app's run adds that hook to every local dependency in the chain. Otherwise, add it yourself.
+`nudeps dependents` itself never edits a `package.json`.
 See [Local Dependencies](/local-deps/).
 
 ## Pruning

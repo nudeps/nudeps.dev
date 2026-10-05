@@ -19,7 +19,7 @@ let { config } = await nudeps();
 // config.map  → "importmap.js"
 ```
 
-It resolves to `null` instead when the run was skipped, which happens for a [workspace](/local-deps/) child whose lockfile npm has yet to write or is about to rewrite — the run that reads it comes later. Check for it before destructuring:
+It resolves to `null` instead when the run was skipped, which happens for a [workspace](/workspaces/) child whose lockfile npm has yet to write or is about to rewrite — the run that reads it comes later. Check for it before destructuring:
 
 ```js
 let result = await nudeps();
@@ -60,7 +60,7 @@ await nudeps.write();
 
 Each `Nudeps` prepares and writes once: calling `prepare()` or `write()` again returns the first call's result, even a failed one. For a build that repeats, e.g. in watch mode, create a new `Nudeps` for each build. It traces your dependencies again, so it picks up changes, and nudeps' cache keeps that fast.
 
-Unlike `nudeps()`, the class never skips a run, not even while npm is still installing a [workspace](/local-deps/). Use it in your build scripts, not npm hooks, or skip such a run yourself:
+Unlike `nudeps()`, the class never skips a run, not even while npm is still installing a [workspace](/workspaces/). Use it in your build scripts, not npm hooks, or skip such a run yourself:
 
 ```js
 if (!nudeps.isDeferred()) {
