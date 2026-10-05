@@ -24,6 +24,14 @@ You can see an example of what such a file looks like in the [`floating-ui` demo
 Normally you should avoid committing your import map to version control as it's a build artifact, but it is included there for demonstration purposes.
 :::
 
+## How it works
+
+On their own, browsers only import modules by URL, so `import { createApp } from "vue"` fails.
+An [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) fixes that by telling the browser which URL each package name stands for.
+Nudeps copies your dependencies to `client_modules` and keeps that map up to date, so you can import packages by name with no bundler.
+
+Read [How It Works](/how-it-works/) for more details.
+
 ## Including the import map
 
 To use the import map in your app, include it in a classic (non-module) `<script>` element, before any modules are loaded, either manually or via your templating system of choice:

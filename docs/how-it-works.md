@@ -4,6 +4,25 @@ order: 0
 
 # How It Works
 
+## What import maps are
+
+Browsers load JavaScript modules natively, but on their own they only import by URL.
+`import { LitElement } from "lit"` fails, because `"lit"` is a _bare specifier_ (a package name), not a URL.
+
+An [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) is a JSON object that tells the browser which URL each specifier stands for:
+
+```json
+{
+	"imports": {
+		"lit": "./client_modules/lit@3.3.2/index.js"
+	}
+}
+```
+
+With this map in place, the browser resolves `"lit"` to that file, and your code imports packages by name, just like in Node.
+
+## What Nudeps does
+
 Nudeps copies your dependencies to a **local directory** you specify (`./client_modules` by default), adds versions to directory names for **cache busting** just like a CDN, generates an [**import map**](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) that maps specifiers to these local paths, and an injection script that injects the import map into any HTML page.
 For example, `lit` may be mapped to `"./client_modules/lit@3.3.2/index.js"`.
 The injection script rebases each address to an absolute URL at runtime, against its own location rather than the page's — so a single import map resolves correctly from every page of a multi-page site, at any directory depth.
