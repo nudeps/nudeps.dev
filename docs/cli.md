@@ -14,6 +14,18 @@ npm runs this for you whenever dependencies change, so you only need it explicit
 
 Every [config option](/config/) that has a CLI equivalent can be passed as a flag, e.g. `npx nudeps --dir=vendor -m prod`.
 
+## `nudeps dependents`
+
+Tell every repo that depends on this one locally that it changed, so they regenerate their import maps, and register with this repo's own local dependencies so they can do the same for it.
+
+npm does not run your `dependencies` hook when the dependencies of `other-repo` change (npm bug [#8984](https://github.com/npm/cli/issues/8984)), so `other-repo` has to notify you itself.
+This command does that without generating an import map, so `other-repo` needs no Nudeps installed.
+
+Run it from `other-repo`'s `dependencies` hook: `"dependencies": "npx nudeps dependents"`.
+With [`wireLocalDeps: true`](/config/#wirelocaldeps), your app's run adds that hook to every local dependency in the chain. Otherwise, add it yourself.
+`nudeps dependents` itself never edits a `package.json`.
+See [Local Dependencies](/local-deps/).
+
 ## Pruning
 
 `npx nudeps --prune`
