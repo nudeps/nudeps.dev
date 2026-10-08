@@ -7,7 +7,7 @@ const nudeps = JSON.parse(fs.readFileSync(new URL("node_modules/nudeps/package.j
 export default {
 	title: "Nudeps",
 	description: "Web dependencies, naked. Bundler-free, local-first dependency management.",
-	logo: "/wordmark.svg",
+	wordmark: "/wordmark.svg",
 	icon: "/logo.svg",
 	version: nudeps.version,
 	repo: "https://github.com/nudeps/nudeps",
