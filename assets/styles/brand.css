@@ -1,11 +1,10 @@
 /* Every tint is derived from these by the oklch() math in Docspire's color tokens. */
 :where(:root) {
 	/* --color-base: #eab67d; */
-	/* The browser chrome blue from the logo */
-	--color-accent: #6f9dc8;
-	/* Docspire colors links with the palette's blue when there is one, which would otherwise be
-	   @nudeui/color's far more saturated blue. Links (including the header title) should be our blue. */
-	--color-blue: var(--color-accent);
+	/* Our blue is the browser chrome blue from the logo, replacing @nudeui/color's far more
+	   saturated one. Docspire colors links (including the header title) with the palette blue. */
+	--color-blue: #6f9dc8;
+	--color-accent: var(--color-blue);
 }
 
 /* Homepage walkthrough: numbered steps, one snippet each (see docs/index.md).
