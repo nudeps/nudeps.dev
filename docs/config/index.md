@@ -70,7 +70,7 @@ Nudeps needs to be able to own this file, do not input a file you use for other 
 `--root` · Default: workspace root
 
 The directory your host serves as `/`.
-Hosts without symlink support (Netlify, Cloudflare) express [aliases](/config/aliases/) as redirect rules, which need URLs rather than file paths — so set this when `dir` lives inside a build output directory (e.g. an SSG's `dist/`), or the rules will be written outside the deployed site and will not match.
+Hosts without symlink support (Netlify) express [aliases](/config/aliases/) as redirect rules, which need URLs rather than file paths — so set this when `dir` lives inside a build output directory (e.g. an SSG's `dist/`), or the rules will be written outside the deployed site and will not match.
 Defaults to the npm workspace root, which is typically the deploy root; in a single-package project that is the project root.
 
 ### `module`
@@ -192,8 +192,9 @@ Symlinking means edits to a local dependency are visible immediately, with no re
 [`dev` mode](/config/overrides/#modes) sets it to `true`, `prod` mode to `false`.
 
 ::: note
-Netlify, Cloudflare Pages and GitHub Pages do not serve symlinks, so there `symlink: true` is a local-development affordance, not a deploy strategy.
-Vercel serves only symlinks that point inside the output directory, and AWS Amplify serves them wherever they point.
+Netlify and GitHub Pages do not serve symlinks, so there `symlink: true` is a local-development affordance, not a deploy strategy.
+Vercel and Cloudflare Pages serve only symlinks that point inside the output directory, and AWS Amplify serves them wherever they point.
+Cloudflare Pages fails the whole deploy on a symlink that points outside it.
 :::
 
 ### `preserveSymlinks`
@@ -247,6 +248,11 @@ So for Vercel projects, `nudeps install` adds `"build": "nudeps"` when there is 
 It detects Vercel from `vercel.json` or `.vercel/project.json` (created by `vercel link`).
 Otherwise, run `npx nudeps install --host vercel`.
 Other runs never edit your `package.json`: they warn when the `build` script is missing and point you to `npx nudeps install`.
+:::
+
+::: warning
+Cloudflare Pages installs dependencies, and so runs Nudeps, only when the project has a build command.
+It ignores the `build` script in `package.json`, so set the command in the project's build settings (e.g. `npx nudeps`).
 :::
 
 ### `mode`

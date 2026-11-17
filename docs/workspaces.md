@@ -23,6 +23,6 @@ See [Workspace siblings](/local-deps/#workspace-siblings).
 
 ## Deploying
 
-On Netlify and Cloudflare, workspace children write their redirect rules to the root `_redirects`, prefixed with the child's directory.
+On Netlify, workspace children write their redirect rules to the root `_redirects`, prefixed with the child's directory.
 This assumes the workspace root is the deploy root.
 If it is not, set [`root`](/config/#root).
