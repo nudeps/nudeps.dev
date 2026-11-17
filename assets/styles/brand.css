@@ -60,3 +60,21 @@
 		}
 	}
 }
+
+/* Header: npm package link, styled like Docspire's GitHub link (see templates/npm-link.njk).
+   Both are slotted into nav.end after the color scheme toggle, so push the toggle back to the end. */
+body > header {
+	.npm.icon {
+		--icon: var(--icon-npm);
+		font-size: 1lh;
+		color: light-dark(black, white);
+
+		&:not(:focus, :hover) {
+			opacity: 0.7;
+		}
+	}
+
+	.color-scheme-toggle {
+		order: 1;
+	}
+}
