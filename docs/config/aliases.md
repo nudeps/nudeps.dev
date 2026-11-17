@@ -14,7 +14,7 @@ By default, `alias` is `true`, which creates an unversioned symlink for every co
 Set `alias: false` to opt out entirely.
 
 ::: note
-Hosts without symlink support (Netlify, Cloudflare Pages) get redirect rules instead, written to `_redirects` in your [`root`](/config/#root).
+Hosts without symlink support (Netlify) get redirect rules instead, written to `_redirects` in your [`root`](/config/#root).
 :::
 
 ## Values
