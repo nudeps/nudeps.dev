@@ -36,6 +36,10 @@ features:
     description: Dynamic `import()`, `import.meta.resolve()`, CJS packages, local packages, git dependencies, npm aliases, npm workspaces all work.
     href: /faq/
 testimonials:
+  - name: Matteo Collina
+    quote: "I totally love this. It’s amazing. Congrats 🎉! This could be the basis of the next generation of frameworks."
+    title: Node.js TSC member, creator of Fastify and Pino
+    avatar: https://avatars.githubusercontent.com/u/52195?v=4
   - name: Sam Littlefair
     quote: "I ran the npx command and added the import map to my app, but I assumed that there was still a lot more work to do. I was shocked to realize I was done."
     title: Technical writer and Svelte developer
