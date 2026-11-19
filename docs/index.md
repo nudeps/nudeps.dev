@@ -49,7 +49,7 @@ outro: |
 
   - [Web dependencies are broken. Can we fix them?](https://lea.verou.me/blog/2026/web-deps/)
   - [External import maps, today!](https://lea.verou.me/blog/2026/external-import-maps-today/)
-  - [Introducing Nudeps: Web dependencies, naked!](https://lea.verou.me/blog/2026/nudeps/) (upcoming)
+  - [Introducing Nudeps: Web dependencies, naked!](https://lea.verou.me/blog/2026/nudeps/)
 ---
 
 ## Three steps, then forget it's there
