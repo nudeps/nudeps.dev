@@ -20,6 +20,10 @@ export default {
 		{
 			url: import.meta.url,
 			styles: "brand.css",
+			data: {
+				// Crawlers need an absolute URL
+				image: "https://nudeps.dev/og-image.png",
+			},
 			icons: {
 				// Simple Icons: npm
 				npm: `
@@ -41,6 +45,7 @@ export default {
 					_redirects: "_redirects",
 					"logo.svg": "logo.svg",
 					"wordmark.svg": "wordmark.svg",
+					"og-image.png": "og-image.png",
 				});
 			},
 		},
